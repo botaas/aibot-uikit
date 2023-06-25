@@ -7,11 +7,6 @@
 > The official React components for OneChat, a service for
 > building chat applications.
 
-[![NPM](https://img.shields.io/npm/v/one-chat-react.svg)](https://www.npmjs.com/package/one-chat-react)
-[![build](https://github.com/botaas/aibot-uikit/workflows/test/badge.svg)](https://github.com/botaas/aibot-uikit/actions)
-[![Component Reference](https://img.shields.io/badge/docs-component%20reference-blue.svg)](https://openbot.chat/chat/docs/sdk/react/)
-[![codecov](https://codecov.io/gh/GetStream/one-chat-react/branch/master/graph/badge.svg)](https://codecov.io/gh/GetStream/one-chat-react)
-
 **Quick Links**
 
 - [Register](https://openbot.chat/chat/trial/) to get an API key for OneChat
@@ -42,24 +37,23 @@ For complete pricing and details visit our [Chat Pricing Page](https://openbot.c
 
 ### Install with NPM
 
-`npm install react react-dom one-chat one-chat-react`
+`npm install react react-dom @openbot/aibot-uikit`
 
 ### Install with Yarn
 
-`yarn add react react-dom one-chat one-chat-react`
+`yarn add react react-dom @openbot/aibot-uikit`
 
 ### Install via CDN
 
 ```
 <script src="https://cdn.jsdelivr.net/npm/react@16.13.1/umd/react.production.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@16/umd/react-dom.production.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/one-chat"></script>
-<script src="https://cdn.jsdelivr.net/npm/one-chat-react"></script>
+<script src="https://cdn.jsdelivr.net/npm/@openbot/aibot-uikit"></script>
 ```
 
 ## Example Apps
 
-We have built five demo applications showcasing a variety of chat use cases, including social messaging, team collaboration, customer support, livestream gaming, and virtual event. You can preview these [demos](https://openbot.chat/chat/demos/) on our website. Also, the code is [open source](https://github.com/GetStream/website-react-examples/).
+We have built five demo applications showcasing a variety of chat use cases, including social messaging, team collaboration, customer support, livestream gaming, and virtual event. You can preview these [demos](https://openbot.chat/chat/demos/) on our website.
 
 ## Docs
 
@@ -67,7 +61,7 @@ We use a doc generator to build our [component documentation](https://openbot.ch
 
 ##  TypeScript Support
 
-As of version `5.0.0`, the component library has been converted to TypeScript. Please read the [TypeScript guide](https://github.com/botaas/aibot-uikit/wiki/Typescript-support) for details and implementation assistance.
+Please read the [TypeScript guide](https://github.com/botaas/aibot-uikit/wiki/Typescript-support) for details and implementation assistance.
 
 ##  Component Reusability
 
