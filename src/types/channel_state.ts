@@ -18,7 +18,7 @@ type ChannelReadStatus<OneChatGenerics extends ExtendableGenerics = DefaultGener
 /**
  * ChannelState - A container class for the channel state.
  */
-export type ChannelState<OneChatGenerics extends ExtendableGenerics = DefaultGenerics> = {
+export interface ChannelState<OneChatGenerics extends ExtendableGenerics = DefaultGenerics> {
 	watcher_count: number;
 	typing: Record<string, Event<OneChatGenerics>>;
 	read: ChannelReadStatus<OneChatGenerics>;
