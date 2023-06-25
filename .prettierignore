@@ -1,0 +1,13 @@
+node_modules
+/.cache/
+/public/static/styles.js
+examples/*/src/serviceWorker.js
+src/onechat-emoji.json
+/dist/
+/lib/
+/bin/
+/include/
+/build/
+build
+*.md
+src/components/docs/

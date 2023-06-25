@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["src/@types/*"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "lib": ["esnext", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": false,
+    "strict": true,
+    "target": "ES5",
+    "allowSyntheticDefaultImports": true,
+    "noEmitOnError": false,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "checkJs": false,
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "declarationMap": true,
+    "types": ["vite/client"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": [
+    "./src/mock-builders",
+    "node_modules",
+    "babel.config.js",
+    "jest.config.js",
+    "**/__tests__/*.test.js"
+  ]
+}
