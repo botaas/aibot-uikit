@@ -83,13 +83,13 @@ export const useChat = <
       userLanguage = isLanguageSupported(browserLanguage) ? browserLanguage : defaultLanguage;
     }
 
-    const streami18n = i18nInstance || new OneChati18n({ language: userLanguage });
+    const i18n = i18nInstance || new OneChati18n({ language: userLanguage });
 
-    streami18n.registerSetLanguageCallback((t) =>
+    i18n.registerSetLanguageCallback((t) =>
       setTranslators((prevTranslator) => ({ ...prevTranslator, t })),
     );
 
-    streami18n.getTranslators().then((translator) => {
+    i18n.getTranslators().then((translator) => {
       setTranslators({
         ...translator,
         userLanguage: userLanguage || defaultLanguage,
