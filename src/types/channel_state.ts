@@ -27,7 +27,7 @@ export interface ChannelState<OneChatGenerics extends ExtendableGenerics = Defau
 	watchers: Record<string, UserResponse<OneChatGenerics>>;
 	members: Record<string, ChannelMemberResponse<OneChatGenerics>>;
 	membership: ChannelMembership<OneChatGenerics>;
-	last_message_at: Date | null;
+	lastMessageAt: Date | null;
 	messages: Array<ReturnType<ChannelState<OneChatGenerics>['formatMessage']>>;
 	latestMessages: Array<ReturnType<ChannelState<OneChatGenerics>['formatMessage']>>;
 
