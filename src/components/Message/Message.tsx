@@ -45,6 +45,7 @@ type MessageContextPropsToPick =
   | 'onMentionsHoverMessage'
   | 'onReactionListClick'
   | 'reactionSelectorRef'
+  | 'showName'
   | 'showDetailedReactions';
 
 type MessageWithContextProps<
@@ -170,6 +171,7 @@ export const Message = <
     openThread: propOpenThread,
     pinPermissions,
     retrySendMessage: propRetrySendMessage,
+    showName = true,
   } = props;
 
   const { addNotification } = useChannelActionContext<OneChatGenerics>('Message');
@@ -257,6 +259,7 @@ export const Message = <
       reactionSelectorRef={reactionSelectorRef}
       readBy={props.readBy}
       renderText={props.renderText}
+      showName={showName}
       showDetailedReactions={showDetailedReactions}
       threadList={props.threadList}
       unsafeHTML={props.unsafeHTML}

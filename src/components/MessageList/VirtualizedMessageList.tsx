@@ -335,6 +335,8 @@ const VirtualizedMessageListWithContext = <
       const endOfGroup =
         shouldGroupByUser && message.user?.id !== messageList[streamMessageIndex + 1]?.user?.id;
 
+      const showName = !!message.user?.name
+
       return (
         <Message
           autoscrollToBottom={virtuoso.current?.autoscrollToBottom}
@@ -346,6 +348,7 @@ const VirtualizedMessageListWithContext = <
           message={message}
           Message={MessageUIComponent}
           messageActions={props.messageActions}
+          showName={showName}
         />
       );
     },

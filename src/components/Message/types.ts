@@ -94,6 +94,8 @@ export type MessageProps<
   threadList?: boolean;
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML?: boolean;
+  /** Whether or not to show user's name */
+  showName?: boolean;
 };
 
 export type MessageUIComponentProps<

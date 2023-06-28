@@ -74,6 +74,8 @@ export type MessageContextValue<
   reactionSelectorRef: React.MutableRefObject<HTMLDivElement | null>;
   /** Function to toggle the edit state on a Message */
   setEditingState: ReactEventHandler;
+  /** Whether or not to show user's name */
+  showName: boolean;
   /** Whether or not to show reaction list details */
   showDetailedReactions: boolean;
   /** Additional props for underlying MessageInput component, [available props](https://openbot.chat/chat/docs/sdk/react/message-input-components/message_input/#props) */

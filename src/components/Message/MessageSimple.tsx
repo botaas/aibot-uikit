@@ -55,6 +55,7 @@ const MessageSimpleWithContext = <
     onUserHover,
     reactionSelectorRef,
     renderText,
+    showName,
     showDetailedReactions,
     threadList,
   } = props;
@@ -172,7 +173,7 @@ const MessageSimpleWithContext = <
             )}
             {showMetadata && themeVersion === '1' && (
               <div className='str-chat__message-data str-chat__message-simple-data'>
-                {!isMyMessage() && message.user ? (
+                {!isMyMessage() && message.user && showName ? (
                   <span className='str-chat__message-simple-name'>
                     {message.user.name || message.user.id}
                   </span>
@@ -190,7 +191,7 @@ const MessageSimpleWithContext = <
           {showMetadata && themeVersion === '2' && (
             <div className='str-chat__message-data str-chat__message-simple-data str-chat__message-metadata'>
               <MessageStatus />
-              {!isMyMessage() && !!message.user && (
+              {!isMyMessage() && !!message.user && showName && (
                 <span className='str-chat__message-simple-name'>
                   {message.user.name || message.user.id}
                 </span>
