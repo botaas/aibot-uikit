@@ -249,21 +249,23 @@ const MessageInputV2 = <
         {displayQuotedMessage && <QuotedMessagePreviewHeader />}
 
         <div className='str-chat__message-input-inner'>
-          <div className='str-chat__file-input-container' data-testid='file-upload-button'>
-            <UploadButton
-              accept={acceptedFiles?.join(',')}
-              aria-label='File upload'
-              className='str-chat__file-input'
-              data-testid='file-input'
-              disabled={!isUploadEnabled || maxFilesLeft === 0}
-              id={id}
-              multiple={multipleUploads}
-              onFileChange={uploadNewFiles}
-            />
-            <label className='str-chat__file-input-label' htmlFor={id}>
-              <FileUploadIcon />
-            </label>
-          </div>
+          {isUploadEnabled && (
+            <div className='str-chat__file-input-container' data-testid='file-upload-button'>
+              <UploadButton
+                accept={acceptedFiles?.join(',')}
+                aria-label='File upload'
+                className='str-chat__file-input'
+                data-testid='file-input'
+                disabled={!isUploadEnabled || maxFilesLeft === 0}
+                id={id}
+                multiple={multipleUploads}
+                onFileChange={uploadNewFiles}
+              />
+              <label className='str-chat__file-input-label' htmlFor={id}>
+                <FileUploadIcon />
+              </label>
+            </div>
+          )}
           <div className='str-chat__message-textarea-container'>
             {displayQuotedMessage && <QuotedMessagePreview quotedMessage={quotedMessage} />}
 
