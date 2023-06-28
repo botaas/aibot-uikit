@@ -32,7 +32,7 @@ const externalDependencies = [
   '@fortawesome/free-regular-svg-icons',
   '@fortawesome/react-fontawesome',
   '@juggle/resize-observer',
-  '@sindresorhus/transliterate',
+  '@stream-io/transliterate',
   'custom-event',
   /dayjs/,
   /emoji-mart/,
