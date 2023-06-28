@@ -72,11 +72,11 @@ const basePlugins = ({ useBrowserResolve = false }) => [
     browser: useBrowserResolve,
   }),
   typescript(),
+  commonjs(),
   babel({
     babelHelpers: 'runtime',
     exclude: 'node_modules/**',
   }),
-  commonjs(),
   // import files as data-uris or es modules
   url(),
   copy({
