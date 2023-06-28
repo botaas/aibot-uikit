@@ -431,6 +431,10 @@ const ChannelInner = <
       }
     }
 
+    if (event.type === 'message.updated') {
+      return dispatch({ channel, type: 'copyMessagesFromChannel' })
+    }
+
     if (event.type === 'user.deleted') {
       const oldestID = channel.state?.messages?.[0]?.id;
 
@@ -860,6 +864,7 @@ const ChannelInner = <
     shouldGenerateVideoThumbnail: props.shouldGenerateVideoThumbnail || true,
     videoAttachmentSizeHandler: props.videoAttachmentSizeHandler || getVideoAttachmentConfiguration,
     watcher_count: state.watcherCount,
+    skipMessageDataMemoization,
   });
 
   const channelActionContextValue: ChannelActionContextValue<OneChatGenerics> = useMemo(

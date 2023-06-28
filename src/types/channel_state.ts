@@ -26,6 +26,7 @@ export interface ChannelState<OneChatGenerics extends ExtendableGenerics = Defau
 	threads: Record<string, Array<ReturnType<ChannelState<OneChatGenerics>['formatMessage']>>>;
 	watchers: Record<string, UserResponse<OneChatGenerics>>;
 	members: Record<string, ChannelMemberResponse<OneChatGenerics>>;
+	unreadCount: number;
 	membership: ChannelMembership<OneChatGenerics>;
 	lastMessageAt: Date | null;
 	messages: Array<ReturnType<ChannelState<OneChatGenerics>['formatMessage']>>;
@@ -54,6 +55,23 @@ export interface ChannelState<OneChatGenerics extends ExtendableGenerics = Defau
 	 *
 	 */
 	formatMessage: (message: MessageResponse<OneChatGenerics>) => FormatMessageResponse<OneChatGenerics>
+
+	/**
+	 * Updates all instances of given message in channel state
+	 * @param message
+	 * @param updateFunc
+	 */
+	updateMessage: (
+		message: {
+			id?: string;
+			parent_id?: string;
+			pinned?: boolean;
+			show_in_channel?: boolean;
+		},
+		updateFunc: (
+			msg: ReturnType<ChannelState<OneChatGenerics>['formatMessage']>,
+		) => ReturnType<ChannelState<OneChatGenerics>['formatMessage']>,
+	) => void
 
 	/**
 	 * removeMessage - Description

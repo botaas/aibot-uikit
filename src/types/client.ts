@@ -25,11 +25,16 @@ import type {
 	UserOptions,
 	UserResponse,
 	UserSort,
+	Event,
 } from './models';
 
 export interface Client<OneChatGenerics extends ExtendableGenerics = DefaultGenerics> {
+	baseURL?: string;
 	user?: OwnUserResponse<OneChatGenerics> | UserResponse<OneChatGenerics>;
 	userID?: string;
+	activeChannels: {
+		[key: string]: Channel<OneChatGenerics>;
+	};
 	getAppSettings: () => Promise<AppSettingsAPIResponse<OneChatGenerics>>
 
 	/**
@@ -50,6 +55,8 @@ export interface Client<OneChatGenerics extends ExtendableGenerics = DefaultGene
 	 * off - Remove the event handler
 	 */
 	off: (callbackOrString: EventHandler<OneChatGenerics> | string, callbackOrNothing?: EventHandler<OneChatGenerics>) => void;
+
+	dispatchEvent: (event: Event<OneChatGenerics>) => void;
 
 	/**
 	 * queryUsers - Query users and watch user presence

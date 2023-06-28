@@ -25,6 +25,7 @@ import type {
 	QueryChannelAPIResponse,
 	SendFileAPIResponse,
 	ChannelConfigWithInfo,
+	Event,
 } from './models';
 
 export interface Channel<OneChatGenerics extends ExtendableGenerics = DefaultGenerics> {
@@ -251,4 +252,6 @@ export interface Channel<OneChatGenerics extends ExtendableGenerics = DefaultGen
 	 * off - Remove the event handler
 	 */
 	off: (callbackOrString: EventHandler<OneChatGenerics> | string, callbackOrNothing?: EventHandler<OneChatGenerics>) => void;
+
+	dispatchEvent: (event: Event<OneChatGenerics>) => void;
 }
