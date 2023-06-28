@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 import { getWholeChar } from '../../utils';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../types';
 
-export type AvatarProps<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = {
+export type AvatarProps<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = {
   /** Image URL or default is an image of the first initial of the name if there is one  */
   image?: string | null;
   /** Name of the image, used for title tag fallback */
@@ -30,9 +28,7 @@ export type AvatarProps<
 /**
  * A round avatar image with fallback to username's first letter
  */
-export const Avatar = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const Avatar = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: AvatarProps<OneChatGenerics>,
 ) => {
   const {

@@ -5,7 +5,7 @@ import { getChannel } from '../utils';
 
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Channel, Event, DefaultOneChatGenerics } from '../../../types';
+import type { Channel, DefaultOneChatGenerics, Event } from '../../../types';
 
 export const useChannelVisibleListener = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

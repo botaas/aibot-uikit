@@ -9,7 +9,14 @@ import {
 import { OneChati18n } from '../../../i18n';
 import { version } from '../../../version';
 
-import type { AppSettingsAPIResponse, Channel, Event, Mute, Client, DefaultOneChatGenerics } from '../../../types';
+import type {
+  AppSettingsAPIResponse,
+  Channel,
+  Client,
+  DefaultOneChatGenerics,
+  Event,
+  Mute,
+} from '../../../types';
 
 export type UseChatParams<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -20,9 +27,7 @@ export type UseChatParams<
   initialNavOpen?: boolean;
 };
 
-export const useChat = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->({
+export const useChat = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>({
   client,
   defaultLanguage = 'en',
   i18nInstance,

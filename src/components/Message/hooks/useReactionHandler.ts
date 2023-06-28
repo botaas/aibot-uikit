@@ -7,7 +7,7 @@ import { useChatContext } from '../../../context/ChatContext';
 
 import type { ReactEventHandler } from '../types';
 
-import type { Reaction, ReactionResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, Reaction, ReactionResponse } from '../../../types';
 
 export const reactionHandlerWarning = `Reaction handler was called, but it is missing one of its required arguments.
 Make sure the ChannelAction and ChannelState contexts are properly set and the hook is initialized with a valid message.`;
@@ -44,8 +44,8 @@ export const useReactionHandler = <
       const newReactions: Reaction<OneChatGenerics>[] | undefined = add
         ? [reaction, ...(message?.latest_reactions || [])]
         : message.latest_reactions?.filter(
-          (item) => !(item.type === reaction.type && item.user_id === reaction.user_id),
-        );
+            (item) => !(item.type === reaction.type && item.user_id === reaction.user_id),
+          );
 
       const newOwnReactions = add
         ? [reaction, ...(message?.own_reactions || [])]

@@ -1,10 +1,8 @@
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Client, UpdatedMessage, DefaultOneChatGenerics } from '../../../types';
+import type { Client, DefaultOneChatGenerics, UpdatedMessage } from '../../../types';
 
-type UpdateHandler<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = (
+type UpdateHandler<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = (
   cid: string,
   updatedMessage: UpdatedMessage<OneChatGenerics>,
 ) => ReturnType<Client<OneChatGenerics>['updateMessage']>;

@@ -6,7 +6,7 @@ import { useTranslationContext } from '../../../context/TranslationContext';
 
 import type { ReactEventHandler } from '../types';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 export const missingUseMuteHandlerParamsWarning =
   'useMuteHandler was called but it is missing one or more necessary parameter.';
@@ -48,9 +48,9 @@ export const useMuteHandler = <
 
         notify(
           successMessage ||
-          t(`{{ user }} has been muted`, {
-            user: message.user.name || message.user.id,
-          }),
+            t(`{{ user }} has been muted`, {
+              user: message.user.name || message.user.id,
+            }),
           'success',
         );
       } catch (e) {

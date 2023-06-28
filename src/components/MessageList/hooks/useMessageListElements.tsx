@@ -17,7 +17,7 @@ import type { MessageProps } from '../../Message/types';
 
 import type { OneChatMessage } from '../../../context/ChannelStateContext';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 type MessagePropsToOmit =
   | 'channel'

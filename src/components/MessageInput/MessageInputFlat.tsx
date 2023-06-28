@@ -69,11 +69,9 @@ export const MessageInputFlat = <
 const MessageInputV1 = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >() => {
-  const {
-    acceptedFiles,
-    multipleUploads,
-    quotedMessage,
-  } = useChannelStateContext<OneChatGenerics>('MessageInputFlat');
+  const { acceptedFiles, multipleUploads, quotedMessage } = useChannelStateContext<OneChatGenerics>(
+    'MessageInputFlat',
+  );
   const { t } = useTranslationContext('MessageInputFlat');
   const {
     closeEmojiPicker,

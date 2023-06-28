@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Channel, Event, DefaultOneChatGenerics } from '../../../types';
+import type { Channel, DefaultOneChatGenerics, Event } from '../../../types';
 
 export const useUserPresenceChangedListener = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

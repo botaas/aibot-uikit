@@ -7,14 +7,14 @@ import { ChannelOrUserResponse, isChannel } from '../utils';
 import { useChatContext } from '../../../context/ChatContext';
 
 import type {
+  Channel,
   ChannelFilters,
   ChannelOptions,
   ChannelSort,
+  DefaultOneChatGenerics,
   UserFilters,
   UserOptions,
   UserSort,
-  Channel,
-  DefaultOneChatGenerics
 } from '../../../types';
 import type { SearchBarController } from '../SearchBar';
 import type { SearchInputController } from '../SearchInput';
@@ -41,9 +41,7 @@ export type SearchQueryParams<
     sort?: ChannelSort<OneChatGenerics>;
   };
   userFilters?: {
-    filters?:
-    | UserFilters<OneChatGenerics>
-    | ((query: string) => UserFilters<OneChatGenerics>);
+    filters?: UserFilters<OneChatGenerics> | ((query: string) => UserFilters<OneChatGenerics>);
     options?: UserOptions;
     sort?: UserSort<OneChatGenerics>;
   };

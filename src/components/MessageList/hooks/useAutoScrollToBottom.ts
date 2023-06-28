@@ -5,31 +5,28 @@ import type { OneChatMessage } from '../../../context/ChannelStateContext';
 import type { DefaultOneChatGenerics } from '../../../types';
 
 export type UseAutoScrollToBottomParams<
-	OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
+  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
-	messages?: OneChatMessage<OneChatGenerics>[];
-	scrollToBottom: () => void;
-	atBottom: MutableRefObject<boolean>;
+  atBottom: MutableRefObject<boolean>;
+  scrollToBottom: () => void;
+  messages?: OneChatMessage<OneChatGenerics>[];
 };
 
 export function useAutoScrollToBottom<
-	OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
+  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >(params: UseAutoScrollToBottomParams<OneChatGenerics>) {
-	const {
-		scrollToBottom,
-		atBottom,
-	} = params;
+  const { atBottom, scrollToBottom } = params;
 
-	const messages = useRef<OneChatMessage<OneChatGenerics>[]>();
+  const messages = useRef<OneChatMessage<OneChatGenerics>[]>();
 
-	useLayoutEffect(() => {
-		const prevMessages = messages.current;
-		const newMessages = params.messages;
-		if (prevMessages && newMessages && prevMessages.length === newMessages.length) {
-			if (atBottom.current) {
-				scrollToBottom()
-			}
-		}
-		messages.current = newMessages;
-	}, [messages, params.messages, scrollToBottom, atBottom]);
+  useLayoutEffect(() => {
+    const prevMessages = messages.current;
+    const newMessages = params.messages;
+    if (prevMessages && newMessages && prevMessages.length === newMessages.length) {
+      if (atBottom.current) {
+        scrollToBottom();
+      }
+    }
+    messages.current = newMessages;
+  }, [messages, params.messages, scrollToBottom, atBottom]);
 }

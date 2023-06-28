@@ -33,11 +33,7 @@ export const useAttachments = <
 
   const { removeFile, uploadFile } = useFileUploads<OneChatGenerics, V>(props, state, dispatch);
 
-  const { removeImage, uploadImage } = useImageUploads<OneChatGenerics, V>(
-    props,
-    state,
-    dispatch,
-  );
+  const { removeImage, uploadImage } = useImageUploads<OneChatGenerics, V>(props, state, dispatch);
 
   // Number of files that the user can still add. Should never be more than the amount allowed by the API.
   // If multipleUploads is false, we only want to allow a single upload.

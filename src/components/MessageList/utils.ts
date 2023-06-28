@@ -5,7 +5,7 @@ import { CUSTOM_MESSAGE_TYPE } from '../../constants/messageTypes';
 
 import { isDate } from '../../context/TranslationContext';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../types';
 
 import type { OneChatMessage } from '../../context/ChannelStateContext';
 

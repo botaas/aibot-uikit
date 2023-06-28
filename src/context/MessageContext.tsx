@@ -11,7 +11,7 @@ import type { MessageInputProps } from '../components/MessageInput/MessageInput'
 import type { GroupStyle } from '../components/MessageList/utils';
 import type { RenderTextOptions } from '../utils';
 
-import type { Mute, UserResponse, DefaultOneChatGenerics, UnknownType } from '../types';
+import type { DefaultOneChatGenerics, Mute, UnknownType, UserResponse } from '../types';
 
 export type CustomMessageActions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -74,10 +74,10 @@ export type MessageContextValue<
   reactionSelectorRef: React.MutableRefObject<HTMLDivElement | null>;
   /** Function to toggle the edit state on a Message */
   setEditingState: ReactEventHandler;
-  /** Whether or not to show user's name */
-  showName: boolean;
   /** Whether or not to show reaction list details */
   showDetailedReactions: boolean;
+  /** Whether or not to show user's name */
+  showName: boolean;
   /** Additional props for underlying MessageInput component, [available props](https://openbot.chat/chat/docs/sdk/react/message-input-components/message_input/#props) */
   additionalMessageInputProps?: MessageInputProps<OneChatGenerics>;
   /** Call this function to keep message list scrolled to the bottom when the scroll height increases, e.g. an element appears below the last message (only used in the `VirtualizedMessageList`) */

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 export type OnMentionAction<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

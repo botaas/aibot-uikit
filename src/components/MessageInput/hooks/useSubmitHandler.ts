@@ -6,7 +6,13 @@ import { useTranslationContext } from '../../../context/TranslationContext';
 import type { MessageInputReducerAction, MessageInputState } from './useMessageInputState';
 import type { MessageInputProps } from '../MessageInput';
 
-import type { Attachment, Message, UpdatedMessage, CustomTrigger, DefaultOneChatGenerics } from '../../../types';
+import type {
+  Attachment,
+  CustomTrigger,
+  DefaultOneChatGenerics,
+  Message,
+  UpdatedMessage,
+} from '../../../types';
 
 const getAttachmentTypeFromMime = (mime: string) => {
   if (mime.includes('video/')) return 'video';

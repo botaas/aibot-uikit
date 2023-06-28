@@ -21,7 +21,7 @@ import { useComponentContext } from '../../context/ComponentContext';
 
 import { QuotedMessagePreview as DefaultQuotedMessagePreview } from './QuotedMessagePreview';
 
-import type { Event, CustomTrigger, DefaultOneChatGenerics } from '../../types';
+import type { CustomTrigger, DefaultOneChatGenerics, Event } from '../../types';
 import { CooldownTimer as DefaultCooldownTimer } from './CooldownTimer';
 
 /**
@@ -37,11 +37,9 @@ export const MessageInputSmall = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics,
   V extends CustomTrigger = CustomTrigger
 >() => {
-  const {
-    acceptedFiles,
-    multipleUploads,
-    quotedMessage,
-  } = useChannelStateContext<OneChatGenerics>('MessageInputSmall');
+  const { acceptedFiles, multipleUploads, quotedMessage } = useChannelStateContext<OneChatGenerics>(
+    'MessageInputSmall',
+  );
   const { setQuotedMessage } = useChannelActionContext('MessageInputSmall');
   const { t } = useTranslationContext('MessageInputSmall');
   const { channel } = useChatContext<OneChatGenerics>('MessageInputSmall');
@@ -94,9 +92,11 @@ export const MessageInputSmall = <
         multiple={multipleUploads}
       >
         <div
-          className={`str-chat__small-message-input ${SendButton ? 'str-chat__small-message-input--send-button-active' : ''
-            } ${quotedMessage && quotedMessage.parent_id ? 'str-chat__input-flat-quoted' : ''} ${numberOfUploads ? 'str-chat__small-message-input-has-attachments' : ''
-            } `}
+          className={`str-chat__small-message-input ${
+            SendButton ? 'str-chat__small-message-input--send-button-active' : ''
+          } ${quotedMessage && quotedMessage.parent_id ? 'str-chat__input-flat-quoted' : ''} ${
+            numberOfUploads ? 'str-chat__small-message-input-has-attachments' : ''
+          } `}
         >
           {quotedMessage && quotedMessage.parent_id && (
             <QuotedMessagePreview quotedMessage={quotedMessage} />

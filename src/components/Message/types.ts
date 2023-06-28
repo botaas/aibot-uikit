@@ -12,7 +12,7 @@ import type { ComponentContextValue } from '../../context/ComponentContext';
 import type { MessageContextValue } from '../../context/MessageContext';
 import type { RenderTextOptions } from '../../utils';
 
-import type { UserResponse, CustomTrigger, DefaultOneChatGenerics } from '../../types';
+import type { CustomTrigger, DefaultOneChatGenerics, UserResponse } from '../../types';
 
 export type ReactEventHandler = (event: React.BaseSyntheticEvent) => Promise<void> | void;
 
@@ -90,12 +90,12 @@ export type MessageProps<
   ) => JSX.Element | null;
   /** Custom retry send message handler to override default in [ChannelActionContext](https://openbot.chat/chat/docs/sdk/react/contexts/channel_action_context/) */
   retrySendMessage?: ChannelActionContextValue<OneChatGenerics>['retrySendMessage'];
+  /** Whether or not to show user's name */
+  showName?: boolean;
   /** Whether the Message is in a Thread */
   threadList?: boolean;
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML?: boolean;
-  /** Whether or not to show user's name */
-  showName?: boolean;
 };
 
 export type MessageUIComponentProps<

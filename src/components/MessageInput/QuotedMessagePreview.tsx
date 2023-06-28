@@ -8,7 +8,7 @@ import { useTranslationContext } from '../../context/TranslationContext';
 import { useChatContext } from '../../context/ChatContext';
 
 import type { OneChatMessage } from '../../context/ChannelStateContext';
-import type { TranslationLanguages, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, TranslationLanguages } from '../../types';
 
 export const QuotedMessagePreviewHeader = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

@@ -8,13 +8,13 @@ import type { CustomMentionHandler } from '../components/Message/hooks/useMentio
 import type {
   APIErrorResponse,
   Attachment,
+  DefaultOneChatGenerics,
   ErrorFromResponse,
   Message,
+  UnknownType,
   UpdatedMessage,
   UpdateMessageAPIResponse,
   UserResponse,
-  DefaultOneChatGenerics,
-  UnknownType
 } from '../types';
 
 export type MessageAttachments<
@@ -55,10 +55,7 @@ export type ChannelActionContextValue<
   loadMoreThread: () => Promise<void>;
   onMentionsClick: CustomMentionHandler<OneChatGenerics>;
   onMentionsHover: CustomMentionHandler<OneChatGenerics>;
-  openThread: (
-    message: OneChatMessage<OneChatGenerics>,
-    event?: React.BaseSyntheticEvent,
-  ) => void;
+  openThread: (message: OneChatMessage<OneChatGenerics>, event?: React.BaseSyntheticEvent) => void;
   removeMessage: (message: OneChatMessage<OneChatGenerics>) => void;
   retrySendMessage: RetrySendMessage<OneChatGenerics>;
   sendMessage: (

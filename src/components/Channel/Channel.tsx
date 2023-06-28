@@ -13,18 +13,18 @@ import throttle from 'lodash.throttle';
 import type {
   ChannelAPIResponse,
   ChannelState,
-  Event,
-  Message,
-  MessageResponse,
-  SendMessageAPIResponse,
-  Channel as OneChatChannel,
   Client,
-  UpdatedMessage,
-  UserResponse,
   CustomTrigger,
   DefaultOneChatGenerics,
+  Event,
   GiphyVersions,
   ImageAttachmentSizeHandler,
+  Message,
+  MessageResponse,
+  Channel as OneChatChannel,
+  SendMessageAPIResponse,
+  UpdatedMessage,
+  UserResponse,
   VideoAttachmentSizeHandler,
 } from '../../types';
 import { nanoid } from 'nanoid';
@@ -362,7 +362,7 @@ const ChannelInner = <
     if (doMarkReadRequest) {
       doMarkReadRequest(channel);
     } else {
-      channel.markRead()
+      channel.markRead();
     }
 
     if (activeUnreadHandler) {
@@ -432,7 +432,7 @@ const ChannelInner = <
     }
 
     if (event.type === 'message.updated') {
-      return dispatch({ channel, type: 'copyMessagesFromChannel' })
+      return dispatch({ channel, type: 'copyMessagesFromChannel' });
     }
 
     if (event.type === 'user.deleted') {
@@ -725,12 +725,7 @@ const ChannelInner = <
   };
 
   const sendMessage = async (
-    {
-      attachments = [],
-      mentioned_users = [],
-      parent,
-      text = '',
-    }: MessageToSend<OneChatGenerics>,
+    { attachments = [], mentioned_users = [], parent, text = '' }: MessageToSend<OneChatGenerics>,
     customMessageData?: Partial<Message<OneChatGenerics>>,
   ) => {
     channel.state.filterErrorMessages();

@@ -4,16 +4,14 @@ import { useChatContext } from '../../../context/ChatContext';
 
 import type { OneChatMessage } from '../../../context/ChannelStateContext';
 
-import type { EventHandler, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, EventHandler } from '../../../types';
 
 export const useGiphyPreview = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >(
   separateGiphyPreview: boolean,
 ) => {
-  const [giphyPreviewMessage, setGiphyPreviewMessage] = useState<
-    OneChatMessage<OneChatGenerics>
-  >();
+  const [giphyPreviewMessage, setGiphyPreviewMessage] = useState<OneChatMessage<OneChatGenerics>>();
 
   const { client } = useChatContext<OneChatGenerics>('useGiphyPreview');
 

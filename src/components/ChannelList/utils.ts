@@ -1,6 +1,6 @@
 import uniqBy from 'lodash.uniqby';
 
-import type { Channel, QueryChannelAPIResponse, Client, DefaultOneChatGenerics } from '../../types';
+import type { Channel, Client, DefaultOneChatGenerics, QueryChannelAPIResponse } from '../../types';
 
 /**
  * prevent from duplicate invocation of channel.watch()

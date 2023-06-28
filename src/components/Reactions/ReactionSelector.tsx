@@ -11,7 +11,7 @@ import { useEmojiContext } from '../../context/EmojiContext';
 import { useMessageContext } from '../../context/MessageContext';
 
 import type { NimbleEmojiProps } from 'emoji-mart';
-import type { ReactionResponse, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, ReactionResponse } from '../../types';
 
 export type ReactionSelectorProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -55,10 +55,9 @@ const UnMemoizedReactionSelector = React.forwardRef(
 
     const { Avatar: contextAvatar } = useComponentContext<OneChatGenerics>('ReactionSelector');
     const { Emoji, emojiConfig } = useEmojiContext('ReactionSelector');
-    const {
-      handleReaction: contextHandleReaction,
-      message,
-    } = useMessageContext<OneChatGenerics>('ReactionSelector');
+    const { handleReaction: contextHandleReaction, message } = useMessageContext<OneChatGenerics>(
+      'ReactionSelector',
+    );
 
     const { defaultMinimalEmojis, emojiData: fullEmojiData, emojiSetDef } = emojiConfig || {};
 

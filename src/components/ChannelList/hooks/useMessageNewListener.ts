@@ -5,7 +5,7 @@ import { moveChannelUp } from '../utils';
 
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Channel, Event, DefaultOneChatGenerics } from '../../../types';
+import type { Channel, DefaultOneChatGenerics, Event } from '../../../types';
 
 export const useMessageNewListener = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

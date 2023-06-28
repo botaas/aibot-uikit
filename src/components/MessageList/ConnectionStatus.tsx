@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { CustomNotification } from './CustomNotification';
 import { useChatContext, useTranslationContext } from '../../context';
-import type { Event, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, Event } from '../../types';
 
 const UnMemoizedConnectionStatus = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

@@ -12,7 +12,7 @@ import { useChannelStateContext } from '../../context/ChannelStateContext';
 import { useTranslationContext } from '../../context/TranslationContext';
 
 import type { RenderAttachmentProps } from './utils';
-import type { Dimensions, Attachment } from '../../types';
+import type { Attachment, Dimensions } from '../../types';
 
 const getHostFromURL = (url?: string | null) => {
   if (url !== undefined && url !== null) {

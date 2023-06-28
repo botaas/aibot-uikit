@@ -8,11 +8,9 @@ import { useAudioController } from './hooks/useAudioController';
 
 import { useChatContext } from '../../context/ChatContext';
 
-import type { DefaultOneChatGenerics, Attachment } from '../../types';
+import type { Attachment, DefaultOneChatGenerics } from '../../types';
 
-export type AudioProps<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = {
+export type AudioProps<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = {
   og: Attachment<OneChatGenerics>;
 };
 
@@ -151,9 +149,7 @@ const AudioV2 = ({ og }: AudioProps) => {
   );
 };
 
-const UnMemoizedAudio = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+const UnMemoizedAudio = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: AudioProps<OneChatGenerics>,
 ) => {
   const { themeVersion } = useChatContext<OneChatGenerics>('Audio');

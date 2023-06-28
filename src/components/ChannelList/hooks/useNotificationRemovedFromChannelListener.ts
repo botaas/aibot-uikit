@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Channel, Event, DefaultOneChatGenerics } from '../../../types';
+import type { Channel, DefaultOneChatGenerics, Event } from '../../../types';
 
 export const useNotificationRemovedFromChannelListener = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -13,9 +13,7 @@ export const useNotificationRemovedFromChannelListener = <
     event: Event<OneChatGenerics>,
   ) => void,
 ) => {
-  const { client } = useChatContext<OneChatGenerics>(
-    'useNotificationRemovedFromChannelListener',
-  );
+  const { client } = useChatContext<OneChatGenerics>('useNotificationRemovedFromChannelListener');
 
   useEffect(() => {
     const handleEvent = (event: Event<OneChatGenerics>) => {

@@ -10,7 +10,7 @@ import { useTranslationContext } from '../../../context/TranslationContext';
 import type { MessageInputReducerAction, MessageInputState } from './useMessageInputState';
 import type { MessageInputProps } from '../MessageInput';
 
-import type { SendFileAPIResponse, CustomTrigger, DefaultOneChatGenerics } from '../../../types';
+import type { CustomTrigger, DefaultOneChatGenerics, SendFileAPIResponse } from '../../../types';
 
 export const useFileUploads = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics,

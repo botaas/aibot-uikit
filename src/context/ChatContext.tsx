@@ -2,7 +2,13 @@ import React, { PropsWithChildren, useContext } from 'react';
 
 import { getDisplayName } from './utils/getDisplayName';
 import type { ChatProps } from '../components/Chat/Chat';
-import type { AppSettingsAPIResponse, Channel, Mute, DefaultOneChatGenerics, UnknownType } from '../types';
+import type {
+  AppSettingsAPIResponse,
+  Channel,
+  DefaultOneChatGenerics,
+  Mute,
+  UnknownType,
+} from '../types';
 import type { ChannelsQueryState } from '../components/Chat/hooks/useChannelsQueryState';
 
 type CSSClasses =

@@ -8,7 +8,7 @@ import { useMessageContext } from '../../context/MessageContext';
 import { useTranslationContext } from '../../context/TranslationContext';
 import { useChannelActionContext } from '../../context/ChannelActionContext';
 
-import type { TranslationLanguages, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, TranslationLanguages } from '../../types';
 
 export const QuotedMessage = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -30,7 +30,7 @@ export const QuotedMessage = <
   const quotedMessageText = quotedMessageDeleted
     ? t('This message was deleted...')
     : quoted_message.i18n?.[`${userLanguage}_text` as `${TranslationLanguages}_text`] ||
-    quoted_message.text;
+      quoted_message.text;
 
   const quotedMessageAttachment =
     quoted_message.attachments?.length && !quotedMessageDeleted

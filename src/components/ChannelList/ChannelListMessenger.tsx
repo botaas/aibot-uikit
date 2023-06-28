@@ -3,7 +3,12 @@ import React, { PropsWithChildren } from 'react';
 import { ChatDown, ChatDownProps } from '../ChatDown/ChatDown';
 import { LoadingChannels } from '../Loading/LoadingChannels';
 
-import type { APIErrorResponse, Channel, ErrorFromResponse, DefaultOneChatGenerics } from '../../types';
+import type {
+  APIErrorResponse,
+  Channel,
+  DefaultOneChatGenerics,
+  ErrorFromResponse,
+} from '../../types';
 
 export type ChannelListMessengerProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

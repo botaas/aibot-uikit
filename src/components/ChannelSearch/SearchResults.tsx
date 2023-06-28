@@ -44,10 +44,7 @@ const DefaultSearchResultsHeader = <
 
 export type SearchResultsListProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = Pick<
-  SearchResultsProps<OneChatGenerics>,
-  'results' | 'SearchResultItem' | 'selectResult'
-> & {
+> = Pick<SearchResultsProps<OneChatGenerics>, 'results' | 'SearchResultItem' | 'selectResult'> & {
   focusedUser?: number;
 };
 

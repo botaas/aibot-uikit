@@ -343,7 +343,7 @@ const VirtualizedMessageListWithContext = <
       const endOfGroup =
         shouldGroupByUser && message.user?.id !== messageList[streamMessageIndex + 1]?.user?.id;
 
-      const showName = !!message.user?.name
+      const showName = !!message.user?.name;
 
       return (
         <Message
@@ -586,11 +586,9 @@ export type VirtualizedMessageListProps<
 export function VirtualizedMessageList<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >(props: VirtualizedMessageListProps<OneChatGenerics>) {
-  const {
-    jumpToLatestMessage,
-    loadMore,
-    loadMoreNewer,
-  } = useChannelActionContext<OneChatGenerics>('VirtualizedMessageList');
+  const { jumpToLatestMessage, loadMore, loadMoreNewer } = useChannelActionContext<OneChatGenerics>(
+    'VirtualizedMessageList',
+  );
   const {
     channel,
     hasMore,

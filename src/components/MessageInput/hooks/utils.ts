@@ -3,7 +3,12 @@ import type { ImageUpload } from 'react-file-utils';
 import type { ChannelActionContextValue } from '../../../context/ChannelActionContext';
 import type { ChatContextValue } from '../../../context/ChatContext';
 import type { TranslationContextValue } from '../../../context/TranslationContext';
-import type { AppSettingsAPIResponse, FileUploadConfig, UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type {
+  AppSettingsAPIResponse,
+  DefaultOneChatGenerics,
+  FileUploadConfig,
+  UserResponse,
+} from '../../../types';
 
 export const accentsMap: { [key: string]: string } = {
   a: 'á|à|ã|â|À|Á|Ã|Â',

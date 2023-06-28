@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import type { Element } from 'react-markdown/lib/ast-to-react';
 import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
-import type { UserResponse, DefaultOneChatGenerics } from './types';
+import type { DefaultOneChatGenerics, UserResponse } from './types';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -54,9 +54,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-      const i = singleMatch.exec(match);
-      return i && [i[1], i[2]];
-    })
+        const i = singleMatch.exec(match);
+        return i && [i[1], i[2]];
+      })
     : [];
 
   return links.flat();
@@ -215,15 +215,13 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-  Partial<{
-    emoji: ComponentType<ReactMarkdownProps>;
-    mention: ComponentType<MentionProps<OneChatGenerics>>;
-  }>;
+    Partial<{
+      emoji: ComponentType<ReactMarkdownProps>;
+      mention: ComponentType<MentionProps<OneChatGenerics>>;
+    }>;
 };
 
-export const renderText = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   text?: string,
   mentionedUsers?: UserResponse<OneChatGenerics>[],
   { customMarkDownRenderers }: RenderTextOptions = {},

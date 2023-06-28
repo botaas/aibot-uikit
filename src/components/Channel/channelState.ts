@@ -2,86 +2,91 @@ import type { Reducer } from 'react';
 
 import type { ChannelState, OneChatMessage } from '../../context/ChannelStateContext';
 
-import type { Channel, MessageResponse, ChannelState as OneChatChannelState, DefaultOneChatGenerics } from '../../types';
+import type {
+  Channel,
+  DefaultOneChatGenerics,
+  MessageResponse,
+  ChannelState as OneChatChannelState,
+} from '../../types';
 
 export type ChannelStateReducerAction<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > =
   | {
-    type: 'closeThread';
-  }
+      type: 'closeThread';
+    }
   | {
-    type: 'clearHighlightedMessage';
-  }
+      type: 'clearHighlightedMessage';
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    type: 'copyMessagesFromChannel';
-    parentId?: string | null;
-  }
+      channel: Channel<OneChatGenerics>;
+      type: 'copyMessagesFromChannel';
+      parentId?: string | null;
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    type: 'copyStateFromChannelOnEvent';
-  }
+      channel: Channel<OneChatGenerics>;
+      type: 'copyStateFromChannelOnEvent';
+    }
   | {
-    hasMoreNewer: boolean;
-    highlightedMessageId: string;
-    type: 'jumpToMessageFinished';
-  }
+      hasMoreNewer: boolean;
+      highlightedMessageId: string;
+      type: 'jumpToMessageFinished';
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    type: 'initStateFromChannel';
-  }
+      channel: Channel<OneChatGenerics>;
+      type: 'initStateFromChannel';
+    }
   | {
-    hasMore: boolean;
-    messages: OneChatMessage<OneChatGenerics>[];
-    type: 'loadMoreFinished';
-  }
+      hasMore: boolean;
+      messages: OneChatMessage<OneChatGenerics>[];
+      type: 'loadMoreFinished';
+    }
   | {
-    hasMoreNewer: boolean;
-    messages: OneChatMessage<OneChatGenerics>[];
-    type: 'loadMoreNewerFinished';
-  }
+      hasMoreNewer: boolean;
+      messages: OneChatMessage<OneChatGenerics>[];
+      type: 'loadMoreNewerFinished';
+    }
   | {
-    threadHasMore: boolean;
-    threadMessages: Array<ReturnType<OneChatChannelState<OneChatGenerics>['formatMessage']>>;
-    type: 'loadMoreThreadFinished';
-  }
+      threadHasMore: boolean;
+      threadMessages: Array<ReturnType<OneChatChannelState<OneChatGenerics>['formatMessage']>>;
+      type: 'loadMoreThreadFinished';
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    message: OneChatMessage<OneChatGenerics>;
-    type: 'openThread';
-  }
+      channel: Channel<OneChatGenerics>;
+      message: OneChatMessage<OneChatGenerics>;
+      type: 'openThread';
+    }
   | {
-    error: Error;
-    type: 'setError';
-  }
+      error: Error;
+      type: 'setError';
+    }
   | {
-    loadingMore: boolean;
-    type: 'setLoadingMore';
-  }
+      loadingMore: boolean;
+      type: 'setLoadingMore';
+    }
   | {
-    loadingMoreNewer: boolean;
-    type: 'setLoadingMoreNewer';
-  }
+      loadingMoreNewer: boolean;
+      type: 'setLoadingMoreNewer';
+    }
   | {
-    message: OneChatMessage<OneChatGenerics>;
-    type: 'setThread';
-  }
+      message: OneChatMessage<OneChatGenerics>;
+      type: 'setThread';
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    type: 'setTyping';
-  }
+      channel: Channel<OneChatGenerics>;
+      type: 'setTyping';
+    }
   | {
-    type: 'startLoadingThread';
-  }
+      type: 'startLoadingThread';
+    }
   | {
-    channel: Channel<OneChatGenerics>;
-    message: MessageResponse<OneChatGenerics>;
-    type: 'updateThreadOnEvent';
-  }
+      channel: Channel<OneChatGenerics>;
+      message: MessageResponse<OneChatGenerics>;
+      type: 'updateThreadOnEvent';
+    }
   | {
-    type: 'jumpToLatestMessage';
-  };
+      type: 'jumpToLatestMessage';
+    };
 
 export type ChannelStateReducer<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

@@ -77,9 +77,7 @@ export type AttachmentProps<
 /**
  * A component used for rendering message attachments. By default, the component supports: AttachmentActions, Audio, Card, File, Gallery, Image, and Video
  */
-export const Attachment = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const Attachment = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: AttachmentProps<OneChatGenerics>,
 ) => {
   const { attachments } = props;
@@ -157,9 +155,7 @@ const renderGroupedAttachments = <
   return containers;
 };
 
-const getAttachmentType = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+const getAttachmentType = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   attachment: AttachmentProps<OneChatGenerics>['attachments'][number],
 ): keyof typeof CONTAINER_MAP => {
   if (isScrapedContent(attachment)) {

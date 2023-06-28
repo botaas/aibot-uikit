@@ -14,7 +14,13 @@ import { MessageInputContextProvider } from '../../context/MessageInputContext';
 import type { SearchQueryParams } from '../ChannelSearch/hooks/useChannelSearch';
 import type { MessageToSend } from '../../context/ChannelActionContext';
 
-import type { Message, Channel, SendFileAPIResponse, CustomTrigger, DefaultOneChatGenerics } from '../../types';
+import type {
+  Channel,
+  CustomTrigger,
+  DefaultOneChatGenerics,
+  Message,
+  SendFileAPIResponse,
+} from '../../types';
 
 export type MessageInputProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics,

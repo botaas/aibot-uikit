@@ -1,16 +1,16 @@
 import React, { PropsWithChildren, useContext } from 'react';
 
 import type {
+  Channel,
+  ChannelConfigWithInfo,
   DefaultOneChatGenerics,
   GiphyVersions,
   ImageAttachmentSizeHandler,
-  UnknownType,
-  VideoAttachmentSizeHandler,
-  Channel,
-  ChannelConfigWithInfo,
   MessageResponse,
   Mute,
   ChannelState as OneChatChannelState,
+  UnknownType,
+  VideoAttachmentSizeHandler,
 } from '../types';
 
 export type ChannelNotifications = Array<{

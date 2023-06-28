@@ -12,7 +12,7 @@ import { PopperTooltip } from '../Tooltip';
 
 import type { NimbleEmojiProps } from 'emoji-mart';
 
-import type { ReactionResponse, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, ReactionResponse } from '../../types';
 import type { ReactionEmoji } from '../Channel/emojiData';
 
 type WithTooltipProps = {

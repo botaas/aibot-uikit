@@ -4,7 +4,14 @@ import { MAX_QUERY_CHANNELS_LIMIT } from '../utils';
 
 import { useChatContext } from '../../../context/ChatContext';
 
-import type { Channel, ChannelFilters, ChannelOptions, ChannelSort, Client, DefaultOneChatGenerics } from '../../../types';
+import type {
+  Channel,
+  ChannelFilters,
+  ChannelOptions,
+  ChannelSort,
+  Client,
+  DefaultOneChatGenerics,
+} from '../../../types';
 
 export const usePaginatedChannels = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

@@ -7,15 +7,13 @@ import { useComponentContext } from '../../context';
 
 import type { Attachment, DefaultOneChatGenerics, Dimensions } from '../../types';
 
-export type ImageProps<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = {
+export type ImageProps<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = {
   dimensions?: Dimensions;
   innerRef?: MutableRefObject<HTMLImageElement | null>;
   previewUrl?: string;
   style?: CSSProperties;
 } & (
-    | {
+  | {
       /** The text fallback for the image */
       fallback?: string;
       /** The full size image url */
@@ -23,8 +21,8 @@ export type ImageProps<
       /** The thumb url */
       thumb_url?: string;
     }
-    | Attachment<OneChatGenerics>
-  );
+  | Attachment<OneChatGenerics>
+);
 
 /**
  * A simple component that displays an image.

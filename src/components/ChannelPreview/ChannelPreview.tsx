@@ -12,7 +12,7 @@ import type { AvatarProps } from '../Avatar/Avatar';
 
 import type { OneChatMessage } from '../../context/ChannelStateContext';
 
-import type { Channel, Event, DefaultOneChatGenerics } from '../../types';
+import type { Channel, DefaultOneChatGenerics, Event } from '../../types';
 
 export type ChannelPreviewUIComponentProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

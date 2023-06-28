@@ -11,7 +11,12 @@ import type { EmojiData, NimbleEmojiIndex } from 'emoji-mart';
 
 import type { TriggerSettings } from '../MessageInput/DefaultTriggerProvider';
 
-import type { CommandResponse, UserResponse, CustomTrigger, DefaultOneChatGenerics } from '../../types';
+import type {
+  CommandResponse,
+  CustomTrigger,
+  DefaultOneChatGenerics,
+  UserResponse,
+} from '../../types';
 
 type ObjectUnion<T> = T[keyof T];
 
@@ -57,8 +62,8 @@ export type SuggestionListProps<
       currentTrigger: string;
       dropdownScroll: (element: HTMLDivElement) => void;
       getSelectedItem:
-      | ((item: Parameters<TriggerSettings<OneChatGenerics, V>[key]['output']>[0]) => void)
-      | null;
+        | ((item: Parameters<TriggerSettings<OneChatGenerics, V>[key]['output']>[0]) => void)
+        | null;
       getTextToReplace: (
         item: Parameters<TriggerSettings<OneChatGenerics, V>[key]['output']>[0],
       ) => {
@@ -126,14 +131,14 @@ const UnMemoizedChatAutoComplete = <
   const emojiReplace = props.wordReplace
     ? (word: string) => props.wordReplace?.(word, emojiIndex)
     : (word: string) => {
-      const found = emojiIndex?.search(word) || [];
-      const emoji = found
-        .filter(Boolean)
-        .slice(0, 10)
-        .find(({ emoticons }: EmojiData) => !!emoticons?.includes(word));
-      if (!emoji || !('native' in emoji)) return null;
-      return emoji.native;
-    };
+        const found = emojiIndex?.search(word) || [];
+        const emoji = found
+          .filter(Boolean)
+          .slice(0, 10)
+          .find(({ emoticons }: EmojiData) => !!emoticons?.includes(word));
+        if (!emoji || !('native' in emoji)) return null;
+        return emoji.native;
+      };
 
   const updateInnerRef = useCallback(
     (ref: HTMLTextAreaElement | null) => {

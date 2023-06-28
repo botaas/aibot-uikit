@@ -15,17 +15,15 @@ export type GalleryProps<
 > = {
   images: ((
     | {
-      image_url?: string | undefined;
-      thumb_url?: string | undefined;
-    }
+        image_url?: string | undefined;
+        thumb_url?: string | undefined;
+      }
     | Attachment<OneChatGenerics>
   ) & { previewUrl?: string; style?: CSSProperties })[];
   innerRefs?: MutableRefObject<(HTMLElement | null)[]>;
 };
 
-const UnMemoizedGallery = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+const UnMemoizedGallery = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: GalleryProps<OneChatGenerics>,
 ) => {
   const { images, innerRefs } = props;
@@ -56,10 +54,11 @@ const UnMemoizedGallery = <
         key={`gallery-image-${i}`}
         onClick={() => toggleModal(i)}
         style={{
-          backgroundImage: `url(${images[lastImageIndexInPreview].previewUrl ||
+          backgroundImage: `url(${
+            images[lastImageIndexInPreview].previewUrl ||
             images[lastImageIndexInPreview].image_url ||
             images[lastImageIndexInPreview].thumb_url
-            })`,
+          })`,
           ...image.style,
         }}
         {...(innerRefs?.current && { ref: (r) => (innerRefs.current[i] = r) })}

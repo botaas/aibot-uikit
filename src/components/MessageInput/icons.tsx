@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { useTranslationContext } from '../../context/TranslationContext';
 import { useChatContext } from '../../context/ChatContext';
 
-import type { Message, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, Message } from '../../types';
 
 export const EmojiIconLarge = () => {
   const { t } = useTranslationContext('EmojiIconLarge');

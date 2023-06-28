@@ -1,6 +1,10 @@
 import React, { PropsWithChildren, useContext } from 'react';
 
-import type { ChannelState as OneChatChannelState, DefaultOneChatGenerics, UnknownType } from '../types';
+import type {
+  DefaultOneChatGenerics,
+  ChannelState as OneChatChannelState,
+  UnknownType,
+} from '../types';
 
 export type TypingContextValue<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

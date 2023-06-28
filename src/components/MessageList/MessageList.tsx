@@ -322,11 +322,9 @@ export const MessageList = <
 >(
   props: MessageListProps<OneChatGenerics>,
 ) => {
-  const {
-    jumpToLatestMessage,
-    loadMore,
-    loadMoreNewer,
-  } = useChannelActionContext<OneChatGenerics>('MessageList');
+  const { jumpToLatestMessage, loadMore, loadMoreNewer } = useChannelActionContext<OneChatGenerics>(
+    'MessageList',
+  );
 
   const {
     members: membersPropToNotPass, // eslint-disable-line @typescript-eslint/no-unused-vars

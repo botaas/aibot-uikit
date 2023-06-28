@@ -26,9 +26,7 @@ export type Theme<T extends string = string> =
   | 'team light'
   | T;
 
-export type ChatProps<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = {
+export type ChatProps<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = {
   /** The client object */
   client: Client<OneChatGenerics>;
   /** Object containing custom CSS classnames to override the library's default container CSS */
@@ -62,9 +60,7 @@ export type ChatProps<
  * Wrapper component for a OneChat application. Chat needs to be placed around any other chat components
  * as it provides the ChatContext.
  */
-export const Chat = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const Chat = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: PropsWithChildren<ChatProps<OneChatGenerics>>,
 ) => {
   const {
@@ -96,9 +92,9 @@ export const Chat = <
   const themeVersion: ThemeVersion =
     typeof window !== 'undefined'
       ? ((window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue('--str-chat__theme-version')
-        .replace(' ', '') || '1') as ThemeVersion)
+          .getComputedStyle(document.documentElement)
+          .getPropertyValue('--str-chat__theme-version')
+          .replace(' ', '') || '1') as ThemeVersion)
       : '1';
 
   useCustomStyles(darkMode ? darkModeTheme : customStyles);

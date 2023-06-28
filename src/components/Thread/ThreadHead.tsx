@@ -7,14 +7,10 @@ import { useComponentContext } from '../../context';
 
 import type { DefaultOneChatGenerics } from '../../types';
 
-export const ThreadHead = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const ThreadHead = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: MessageProps<OneChatGenerics>,
 ) => {
-  const { ThreadStart = DefaultThreadStart } = useComponentContext<OneChatGenerics>(
-    'ThreadHead',
-  );
+  const { ThreadStart = DefaultThreadStart } = useComponentContext<OneChatGenerics>('ThreadHead');
   return (
     <div className='str-chat__parent-message-li'>
       <Message initialMessage threadList {...props} />

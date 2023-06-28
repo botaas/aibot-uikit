@@ -11,7 +11,7 @@ import { useChannelStateContext } from '../../../context/ChannelStateContext';
 import type { SearchQueryParams } from '../../ChannelSearch/hooks/useChannelSearch';
 import type { UserTriggerSetting } from '../../MessageInput/DefaultTriggerProvider';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 export type UserTriggerParams<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -62,29 +62,26 @@ export const useUserTrigger = <
   }, [members, watchers]);
 
   const queryMembersThrottled = useCallback(
-    throttle(
-      async (query: string, onReady: (users: UserResponse<OneChatGenerics>[]) => void) => {
-        try {
-          // @ts-expect-error
-          const response = await channel.queryMembers({
-            name: { $autocomplete: query },
-          });
+    throttle(async (query: string, onReady: (users: UserResponse<OneChatGenerics>[]) => void) => {
+      try {
+        // @ts-expect-error
+        const response = await channel.queryMembers({
+          name: { $autocomplete: query },
+        });
 
-          const users = response.members.map(
-            (member) => member.user,
-          ) as UserResponse<OneChatGenerics>[];
+        const users = response.members.map(
+          (member) => member.user,
+        ) as UserResponse<OneChatGenerics>[];
 
-          if (onReady && users.length) {
-            onReady(users);
-          } else {
-            onReady([]);
-          }
-        } catch (error) {
-          console.log({ error });
+        if (onReady && users.length) {
+          onReady(users);
+        } else {
+          onReady([]);
         }
-      },
-      200,
-    ),
+      } catch (error) {
+        console.log({ error });
+      }
+    }, 200),
     [channel],
   );
 

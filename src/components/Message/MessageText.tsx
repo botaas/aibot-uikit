@@ -7,7 +7,7 @@ import { useComponentContext, useMessageContext, useTranslationContext } from '.
 import { renderText as defaultRenderText, isOnlyEmojis } from '../../utils';
 
 import type { MessageContextValue, OneChatMessage } from '../../context';
-import type { TranslationLanguages, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, TranslationLanguages } from '../../types';
 
 export type MessageTextProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -73,9 +73,10 @@ const UnMemoizedMessageTextComponent = <
         className={`
           ${innerClass}
           ${hasAttachment ? ` str-chat__message-${theme}-text-inner--has-attachment` : ''}
-          ${isOnlyEmojis(message.text) && !message.quoted_message
-            ? ` str-chat__message-${theme}-text-inner--is-emoji`
-            : ''
+          ${
+            isOnlyEmojis(message.text) && !message.quoted_message
+              ? ` str-chat__message-${theme}-text-inner--is-emoji`
+              : ''
           }
         `.trim()}
         data-testid='message-text-inner-wrapper'

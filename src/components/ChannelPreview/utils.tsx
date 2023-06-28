@@ -4,7 +4,12 @@ import ReactMarkdown from 'react-markdown';
 
 import type { TranslationContextValue } from '../../context/TranslationContext';
 
-import type { Channel, TranslationLanguages, UserResponse, DefaultOneChatGenerics } from '../../types';
+import type {
+  Channel,
+  DefaultOneChatGenerics,
+  TranslationLanguages,
+  UserResponse,
+} from '../../types';
 
 export const renderPreviewText = (text: string) => <ReactMarkdown skipHtml>{text}</ReactMarkdown>;
 

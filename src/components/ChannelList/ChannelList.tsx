@@ -33,7 +33,15 @@ import { LoadMorePaginator, LoadMorePaginatorProps } from '../LoadMore/LoadMoreP
 
 import { useChatContext } from '../../context/ChatContext';
 
-import type { Channel, ChannelFilters, ChannelOptions, ChannelSort, Event, DefaultOneChatGenerics, PaginatorProps } from '../../types';
+import type {
+  Channel,
+  ChannelFilters,
+  ChannelOptions,
+  ChannelSort,
+  DefaultOneChatGenerics,
+  Event,
+  PaginatorProps,
+} from '../../types';
 
 const DEFAULT_FILTERS = {};
 const DEFAULT_OPTIONS = {};
@@ -316,7 +324,7 @@ const UnMemoizedChannelList = <
     customClasses?.chat ?? 'str-chat',
     theme,
     customClasses?.channelList ??
-    'str-chat-channel-list str-chat__channel-list str-chat__channel-list-react',
+      'str-chat-channel-list str-chat__channel-list str-chat__channel-list-react',
     {
       'str-chat--windows-flags': useImageFlagEmojisOnWindows && navigator.userAgent.match(/Win/),
       'str-chat-channel-list--open': navOpen,

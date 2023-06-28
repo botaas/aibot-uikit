@@ -10,7 +10,7 @@ import type { NimbleEmojiProps } from 'emoji-mart';
 
 import type { ReactEventHandler } from '../Message/types';
 
-import type { ReactionResponse, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, ReactionResponse } from '../../types';
 import type { ReactionEmoji } from '../Channel/emojiData';
 
 import { PopperTooltip } from '../Tooltip';

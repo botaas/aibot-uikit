@@ -18,7 +18,7 @@ import { renderText } from '../../utils';
 
 import type { OneChatMessage } from '../../context/ChannelStateContext';
 
-import type { TranslationLanguages, DefaultOneChatGenerics } from '../../types';
+import type { DefaultOneChatGenerics, TranslationLanguages } from '../../types';
 
 const selectColor = (number: number, dark: boolean) => {
   const hue = number * 137.508; // use golden angle approximation
@@ -90,8 +90,9 @@ const UnMemoizedFixedHeightMessage = <
 
   return (
     <div
-      className={`str-chat__virtual-message__wrapper ${role.isMyMessage ? 'str-chat__virtual-message__wrapper--me' : ''
-        } ${groupedByUser ? 'str-chat__virtual-message__wrapper--group' : ''}`}
+      className={`str-chat__virtual-message__wrapper ${
+        role.isMyMessage ? 'str-chat__virtual-message__wrapper--me' : ''
+      } ${groupedByUser ? 'str-chat__virtual-message__wrapper--group' : ''}`}
       key={message.id}
     >
       {message.user && (

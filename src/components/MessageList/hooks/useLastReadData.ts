@@ -4,7 +4,7 @@ import { getReadStates } from '../utils';
 
 import type { OneChatMessage } from '../../../context/ChannelStateContext';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 type UseLastReadDataParams<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

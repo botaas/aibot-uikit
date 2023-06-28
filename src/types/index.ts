@@ -1,8 +1,8 @@
-export * from './models'
-export * from './events'
-export * from './client'
-export * from './channel'
-export * from './channel_state'
+export * from './models';
+export * from './events';
+export * from './client';
+export * from './channel';
+export * from './channel_state';
 
 import type { PropsWithChildren } from 'react';
 import type { LoadingIndicatorProps } from '../components/Loading/LoadingIndicator';
@@ -15,7 +15,6 @@ import type {
   LiteralStringForUnion,
   Mute,
 } from './models';
-
 
 export type UnknownType = Record<string, unknown>;
 export type PropsWithChildrenOnly = PropsWithChildren<Record<never, never>>;

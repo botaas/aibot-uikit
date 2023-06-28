@@ -55,8 +55,8 @@ const MessageSimpleWithContext = <
     onUserHover,
     reactionSelectorRef,
     renderText,
-    showName,
     showDetailedReactions,
+    showName,
     threadList,
   } = props;
 

@@ -4,7 +4,13 @@ import type { TFunction } from 'i18next';
 import type { PinPermissions } from './hooks';
 import type { MessageProps } from './types';
 import type { MessageContextValue, OneChatMessage } from '../../context';
-import type { MessageResponse, Mute, Client, UserResponse, DefaultOneChatGenerics } from '../../types';
+import type {
+  Client,
+  DefaultOneChatGenerics,
+  MessageResponse,
+  Mute,
+  UserResponse,
+} from '../../types';
 
 /**
  * Following function validates a function which returns notification message.
@@ -209,9 +215,7 @@ export const showMessageActionsBox = (
   return true;
 };
 
-const areMessagesEqual = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+const areMessagesEqual = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   prevMessage: OneChatMessage<OneChatGenerics>,
   nextMessage: OneChatMessage<OneChatGenerics>,
 ) =>
@@ -311,9 +315,7 @@ export const messageHasAttachments = <
   message?: OneChatMessage<OneChatGenerics>,
 ) => !!message?.attachments && !!message.attachments.length;
 
-export const getImages = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const getImages = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   message?: MessageResponse<OneChatGenerics>,
 ) => {
   if (!message?.attachments) {

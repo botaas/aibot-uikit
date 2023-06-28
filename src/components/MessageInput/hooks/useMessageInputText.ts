@@ -89,7 +89,7 @@ export const useMessageInputText = <
         type: 'setText',
       });
       if (publishTypingEvent && newText && channel) {
-        channel.keystroke(parent?.id)
+        channel.keystroke(parent?.id);
       }
     },
     [channel, parent, publishTypingEvent],

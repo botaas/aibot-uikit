@@ -6,7 +6,7 @@ import type { ReactEventHandler } from '../types';
 
 import type { OneChatMessage } from '../../../context/ChannelStateContext';
 
-import type { UserResponse, DefaultOneChatGenerics } from '../../../types';
+import type { DefaultOneChatGenerics, UserResponse } from '../../../types';
 
 export type CustomMentionHandler<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics

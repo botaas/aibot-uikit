@@ -150,9 +150,7 @@ const MemoizedMessage = React.memo(
  * The Message component is a context provider which implements all the logic required for rendering
  * an individual message. The actual UI of the message is delegated via the Message prop on Channel.
  */
-export const Message = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const Message = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: MessageProps<OneChatGenerics>,
 ) => {
   const {
@@ -259,8 +257,8 @@ export const Message = <
       reactionSelectorRef={reactionSelectorRef}
       readBy={props.readBy}
       renderText={props.renderText}
-      showName={showName}
       showDetailedReactions={showDetailedReactions}
+      showName={showName}
       threadList={props.threadList}
       unsafeHTML={props.unsafeHTML}
       userRoles={userRoles}

@@ -15,7 +15,13 @@ import type { FileLike } from 'react-file-utils';
 
 import type { MessageInputProps } from '../MessageInput';
 
-import type { Attachment, Message, UserResponse, CustomTrigger, DefaultOneChatGenerics } from '../../../types';
+import type {
+  Attachment,
+  CustomTrigger,
+  DefaultOneChatGenerics,
+  Message,
+  UserResponse,
+} from '../../../types';
 
 export type FileUpload = {
   file: {
@@ -32,9 +38,7 @@ export type FileUpload = {
   url?: string;
 };
 
-export type ImageUpload<
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
-> = {
+export type ImageUpload<OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics> = {
   file: {
     name: string;
     height?: number;
@@ -174,9 +178,7 @@ const makeEmptyMessageInputState = <
 /**
  * Initializes the state. Empty if the message prop is falsy.
  */
-const initState = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+const initState = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   message?: Pick<OneChatMessage<OneChatGenerics>, 'attachments' | 'mentioned_users' | 'text'>,
 ): MessageInputState<OneChatGenerics> => {
   if (!message) {

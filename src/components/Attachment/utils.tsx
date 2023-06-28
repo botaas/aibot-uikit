@@ -109,8 +109,8 @@ export const renderAttachmentWithinContainer = <
       componentType === 'card' && !attachment?.image_url && !attachment?.thumb_url
         ? 'no-image'
         : attachment?.actions?.length
-          ? 'actions'
-          : '';
+        ? 'actions'
+        : '';
   }
 
   const classNames = clsx('str-chat__message-attachment', {
@@ -202,9 +202,7 @@ export const renderImage = <
  * @deprecated will be removed in the next major release,
  * replaced with the proper component equivalent `AttachmentContainer/CardContainer`
  */
-export const renderCard = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const renderCard = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: RenderAttachmentProps<OneChatGenerics>,
 ) => {
   const { attachment, Card = DefaultCard } = props;
@@ -233,9 +231,7 @@ export const renderCard = <
  * @deprecated will be removed in the next major release,
  * replaced with the proper component equivalent `AttachmentContainer/FileContainer`
  */
-export const renderFile = <
-  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
->(
+export const renderFile = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
   props: RenderAttachmentProps<OneChatGenerics>,
 ) => {
   const { attachment, File = DefaultFile } = props;
