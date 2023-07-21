@@ -9,6 +9,7 @@ import { useMessageInputText } from './useMessageInputText';
 import { useEmojiPicker } from './useEmojiPicker';
 import { useSubmitHandler } from './useSubmitHandler';
 import { usePasteHandler } from './usePasteHandler';
+import { useVoiceInput } from './useVoiceInput';
 
 import type { EmojiData, NimbleEmojiIndex } from 'emoji-mart';
 import type { FileLike } from 'react-file-utils';
@@ -70,6 +71,7 @@ export type MessageInputState<
   mentioned_users: UserResponse<OneChatGenerics>[];
   setText: (text: string) => void;
   text: string;
+  voiceInputIsEnabled: boolean;
 };
 
 type SetEmojiPickerIsOpenAction = {
@@ -121,6 +123,11 @@ type AddMentionedUserAction<
   user: UserResponse<OneChatGenerics>;
 };
 
+type SetVoiceInputIsEnabledAction = {
+  type: 'setVoiceInputIsEnabled';
+  value: boolean;
+};
+
 export type MessageInputReducerAction<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > =
@@ -131,7 +138,8 @@ export type MessageInputReducerAction<
   | SetFileUploadAction
   | RemoveImageUploadAction
   | RemoveFileUploadAction
-  | AddMentionedUserAction<OneChatGenerics>;
+  | AddMentionedUserAction<OneChatGenerics>
+  | SetVoiceInputIsEnabledAction;
 
 export type MessageInputHookProps<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -159,6 +167,11 @@ export type MessageInputHookProps<
   uploadImage: (id: string) => void;
   uploadNewFiles: (files: FileList | File[]) => void;
   emojiIndex?: NimbleEmojiIndex;
+  enableVoiceInput: React.MouseEventHandler<HTMLElement>;
+  disableVoiceInput: React.MouseEventHandler<HTMLElement>;
+  startRecordingVoice: React.MouseEventHandler<HTMLElement>;
+  stopRecordingVoice: React.MouseEventHandler<HTMLElement>;
+  isRecordingVoice: boolean;
 };
 
 const makeEmptyMessageInputState = <
@@ -173,6 +186,7 @@ const makeEmptyMessageInputState = <
   mentioned_users: [],
   setText: () => null,
   text: '',
+  voiceInputIsEnabled: false,
 });
 
 /**
@@ -253,6 +267,7 @@ const initState = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneCh
     mentioned_users,
     setText: () => null,
     text: message.text || '',
+    voiceInputIsEnabled: false,
   };
 };
 
@@ -273,7 +288,12 @@ const messageInputReducer = <
       return { ...state, text: action.getNewText(state.text) };
 
     case 'clear':
-      return makeEmptyMessageInputState();
+      const { voiceInputIsEnabled } = state;
+      return {
+        ...makeEmptyMessageInputState(),
+        // 保持语音输入方式
+        voiceInputIsEnabled,
+      };
 
     case 'setImageUpload': {
       const imageAlreadyExists = state.imageUploads[action.id];
@@ -334,6 +354,9 @@ const messageInputReducer = <
         ...state,
         mentioned_users: state.mentioned_users.concat(action.user),
       };
+
+    case 'setVoiceInputIsEnabled':
+      return { ...state, voiceInputIsEnabled: action.value };
 
     default:
       return state;
@@ -458,6 +481,14 @@ export const useMessageInputState = <
     dispatch({ getNewText: () => text, type: 'setText' });
   }, []);
 
+  const {
+    enableVoiceInput,
+    disableVoiceInput,
+    startRecordingVoice,
+    stopRecordingVoice,
+    isRecordingVoice,
+  } = useVoiceInput(state, dispatch, uploadNewFiles, handleSubmit);
+
   return {
     ...state,
     closeCommandsList,
@@ -491,5 +522,10 @@ export const useMessageInputState = <
     uploadFile,
     uploadImage,
     uploadNewFiles,
+    enableVoiceInput: (enableVoiceInput as unknown) as React.MouseEventHandler<HTMLDivElement>,
+    disableVoiceInput: (disableVoiceInput as unknown) as React.MouseEventHandler<HTMLDivElement>,
+    startRecordingVoice: (startRecordingVoice as unknown) as React.MouseEventHandler<HTMLDivElement>,
+    stopRecordingVoice: (stopRecordingVoice as unknown) as React.MouseEventHandler<HTMLDivElement>,
+    isRecordingVoice,
   };
 };

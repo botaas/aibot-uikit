@@ -50,6 +50,8 @@ export type ComponentContextValue<
   EmojiIcon?: React.ComponentType;
   EmptyStateIndicator?: React.ComponentType<EmptyStateIndicatorProps>;
   FileUploadIcon?: React.ComponentType;
+  VoiceInputIcon?: React.ComponentType;
+  KeyboardInputIcon?: React.ComponentType;
   GiphyPreviewMessage?: React.ComponentType<GiphyPreviewMessageProps<OneChatGenerics>>;
   HeaderComponent?: React.ComponentType;
   Input?: React.ComponentType<MessageInputProps<OneChatGenerics, V>>;

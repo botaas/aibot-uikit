@@ -58,6 +58,8 @@ export type MessageInputProps<
   getDefaultValue?: () => string | string[];
   /** If true, expands the text input vertically for new lines */
   grow?: boolean;
+  /** If true, enable voice input. Default: false */
+  voice?: boolean;
   /** Custom UI component handling how the message input is rendered, defaults to and accepts the same props as [MessageInputFlat](https://github.com/botaas/aibot-uikit/blob/master/src/components/MessageInput/MessageInputFlat.tsx) */
   Input?: React.ComponentType<MessageInputProps<OneChatGenerics, V>>;
   /** Max number of rows the underlying `textarea` component is allowed to grow */

@@ -104,10 +104,10 @@ export const useSubmitHandler = <
   };
 
   const handleSubmit = async (
-    event: React.BaseSyntheticEvent,
+    event?: React.BaseSyntheticEvent,
     customMessageData?: Partial<Message<OneChatGenerics>>,
   ) => {
-    event.preventDefault();
+    event?.preventDefault();
 
     const trimmedMessage = text.trim();
     const isEmptyMessage =

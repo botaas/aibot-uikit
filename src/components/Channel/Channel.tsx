@@ -142,6 +142,10 @@ export type ChannelProps<
   EmptyStateIndicator?: ComponentContextValue<OneChatGenerics>['EmptyStateIndicator'];
   /** Custom UI component for file upload icon, defaults to and accepts same props as: [FileUploadIcon](https://github.com/botaas/aibot-uikit/blob/master/src/components/MessageInput/icons.tsx) */
   FileUploadIcon?: ComponentContextValue<OneChatGenerics>['FileUploadIcon'];
+  /** Custom UI component for voice input icon, defaults to and accepts same props as: [VoiceInputIcon](https://github.com/GetStream/stream-chat-react/blob/master/src/components/MessageInput/icons.tsx) */
+  VoiceInputIcon?: ComponentContextValue<OneChatGenerics>['VoiceInputIcon'];
+  /** Custom UI component for keyboard input icon, defaults to and accepts same props as: [KeyboardInputIcon](https://github.com/GetStream/stream-chat-react/blob/master/src/components/MessageInput/icons.tsx) */
+  KeyboardInputIcon?: ComponentContextValue<OneChatGenerics>['KeyboardInputIcon'];
   /** Custom UI component to render a Giphy preview in the `VirtualizedMessageList` */
   GiphyPreviewMessage?: ComponentContextValue<OneChatGenerics>['GiphyPreviewMessage'];
   /** The giphy version to render - check the keys of the [Image Object](https://developers.giphy.com/docs/api/schema#image-object) for possible values. Uses 'fixed_height' by default */
@@ -899,6 +903,8 @@ const ChannelInner = <
       EmojiIcon: props.EmojiIcon,
       EmptyStateIndicator: props.EmptyStateIndicator,
       FileUploadIcon: props.FileUploadIcon,
+      VoiceInputIcon: props.VoiceInputIcon,
+      KeyboardInputIcon: props.KeyboardInputIcon,
       GiphyPreviewMessage: props.GiphyPreviewMessage,
       HeaderComponent: props.HeaderComponent,
       Input: props.Input,

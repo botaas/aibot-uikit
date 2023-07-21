@@ -11,6 +11,7 @@ import {
   EmojiIconLarge as DefaultEmojiIcon,
   EmojiPickerIcon as DefaultEmojiPickerIcon,
   FileUploadIconFlat as DefaultFileUploadIcon,
+  VoiceInputIcon as DefaultVoiceInputIcon,
   SendButton as DefaultSendButton,
   UploadIcon as DefaultUploadIcon,
 } from './icons';
@@ -33,6 +34,7 @@ import { useComponentContext } from '../../context/ComponentContext';
 
 import type { DefaultOneChatGenerics } from '../../types';
 import { CooldownTimer as DefaultCooldownTimer } from './CooldownTimer';
+import { VoiceInput } from './VoiceInput';
 
 export const MessageInputFlat = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -191,12 +193,16 @@ const MessageInputV2 = <
     setCooldownRemaining,
     text,
     uploadNewFiles,
+    voice,
+    voiceInputIsEnabled,
+    enableVoiceInput,
   } = useMessageInputContext<OneChatGenerics>('MessageInputV2');
 
   const {
     CooldownTimer = DefaultCooldownTimer,
     EmojiIcon = DefaultEmojiPickerIcon,
     FileUploadIcon = DefaultUploadIcon,
+    VoiceInputIcon = DefaultVoiceInputIcon,
     QuotedMessagePreview = DefaultQuotedMessagePreview,
     SendButton = DefaultSendButton,
   } = useComponentContext<OneChatGenerics>('MessageInputV2');
@@ -230,6 +236,15 @@ const MessageInputV2 = <
   // state when editing a message (fix shared state issue)
   const displayQuotedMessage = !message && quotedMessage && !quotedMessage.parent_id;
 
+  // 编辑消息、引用消息不可以语音输入
+  const displayVoiceInput = !message && !displayQuotedMessage && voice && voiceInputIsEnabled
+
+  // 语音输入
+  if (displayVoiceInput) {
+    return <VoiceInput />
+  }
+
+  // 文本输入
   return (
     <>
       <div {...getRootProps({ className: 'str-chat__message-input' })}>
@@ -247,6 +262,18 @@ const MessageInputV2 = <
         {displayQuotedMessage && <QuotedMessagePreviewHeader />}
 
         <div className='str-chat__message-input-inner'>
+
+          {/* TODO rename class names */}
+          <div
+            className='str-chat__file-input-container'
+            data-testid='voice-input-button'
+            onClick={enableVoiceInput}
+          >
+            <label className='str-chat__file-input-label'>
+              <VoiceInputIcon />
+            </label>
+          </div>
+
           {isUploadEnabled && (
             <div className='str-chat__file-input-container' data-testid='file-upload-button'>
               <UploadButton
@@ -264,6 +291,7 @@ const MessageInputV2 = <
               </label>
             </div>
           )}
+          
           <div className='str-chat__message-textarea-container'>
             {displayQuotedMessage && <QuotedMessagePreview quotedMessage={quotedMessage} />}
 
