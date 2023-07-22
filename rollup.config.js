@@ -76,7 +76,8 @@ const basePlugins = ({ useBrowserResolve = false }) => [
   commonjs(),
   babel({
     babelHelpers: 'runtime',
-    exclude: 'node_modules/**',
+    // TODO 为了处理错误屏蔽 (plugin commonjs--resolver) SyntaxError: Unexpected token (61:12) in /Volumes/Workspace/projects/botaas/aibot-uikit/node_modules/react-audio-voice-recorder/dist/index-1c988149.js
+    // exclude: 'node_modules/**',
   }),
   // import files as data-uris or es modules
   url(),
