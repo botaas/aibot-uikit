@@ -53,7 +53,7 @@ export const VoiceInput = <
 								<div className='str-chat__voice-recorder-icon'>
 									<LoadingIndicatorIcon size={17} />
 								</div>
-								<p>{t<string>('Sending files')}</p>
+								<p>{t<string>('Sending audio')}</p>
 							</div>
 						}
 						{
