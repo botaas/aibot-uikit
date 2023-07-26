@@ -9,6 +9,7 @@ import { getDateString } from '../../../i18n/utils';
 export const useVoiceInput = <
 	OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >(
+	maxVoiceDuration: number,
 	state: MessageInputState<OneChatGenerics>,
 	dispatch: React.Dispatch<MessageInputReducerAction<OneChatGenerics>>,
 	uploadNewFiles: (files: FileList | FileLike[] | File[]) => void,
@@ -27,6 +28,7 @@ export const useVoiceInput = <
 		stopRecording,
 		recordingBlob,
 		isRecording,
+		recordingTime,
 	} = useAudioRecorder(
 		{
 			noiseSuppression: true,
@@ -127,6 +129,13 @@ export const useVoiceInput = <
 		// 发送消息
 		handleSubmit()
 	}, [voiceInputIsEnabled, fileUploads, handleSubmit])
+
+	// 录音超时，直接停止录音
+	useEffect(() => {
+		if (recordingTime > maxVoiceDuration) {
+			stopRecording()
+		}
+	}, [recordingTime, stopRecording])
 
 	return {
 		enableVoiceInput,

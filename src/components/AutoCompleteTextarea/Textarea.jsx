@@ -426,6 +426,7 @@ export class ReactTextareaAutocomplete extends React.Component {
       'dropdownStyle',
       'grow',
       'voice',
+      'maxVoiceDuration',
       'handleSubmit',
       'innerRef',
       'itemClassName',

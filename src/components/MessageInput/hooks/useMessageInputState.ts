@@ -387,7 +387,13 @@ export const useMessageInputState = <
   MessageInputHookProps<OneChatGenerics> &
   CommandsListState &
   MentionsListState => {
-  const { additionalTextareaProps, closeEmojiPickerOnClick, getDefaultValue, message } = props;
+  const {
+    additionalTextareaProps,
+    closeEmojiPickerOnClick,
+    getDefaultValue,
+    message,
+    maxVoiceDuration = 60,
+  } = props;
 
   const { channelCapabilities = {}, channelConfig } = useChannelStateContext<OneChatGenerics>(
     'useMessageInputState',
@@ -487,7 +493,7 @@ export const useMessageInputState = <
     startRecordingVoice,
     stopRecordingVoice,
     isRecordingVoice,
-  } = useVoiceInput(state, dispatch, uploadNewFiles, handleSubmit);
+  } = useVoiceInput(maxVoiceDuration, state, dispatch, uploadNewFiles, handleSubmit);
 
   return {
     ...state,
