@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType } from 'react';
+import React, { ComponentProps, ComponentType, useEffect, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -33,6 +33,9 @@ const allowedMarkups: Array<keyof JSX.IntrinsicElements | 'emoji' | 'mention'> =
   'em',
   'strong',
   'a',
+  'img',
+  'video',
+  'iframe',
   'ol',
   'ul',
   'li',
@@ -86,22 +89,71 @@ function encodeDecode(url: string) {
   }
 }
 
+const KEY = '2ff2c1b746d605de30463e';
+
+type IFramelyError = { code: string | number; message: string };
+
 const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isEmail = href?.startsWith('mailto:');
   const isUrl = href?.startsWith('http');
 
+  const [error, setError] = useState<IFramelyError | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [html, setHtml] = useState<{ __html: string }>({
+    __html: '<div />',
+  });
+
   if (!href || (!isEmail && !isUrl)) return <>{children}</>;
 
-  return (
-    <a
-      className={clsx({ 'str-chat__message-url-link': isUrl })}
-      href={href}
-      rel='nofollow noreferrer noopener'
-      target='_blank'
-    >
-      {children}
-    </a>
-  );
+  useEffect(() => {
+    if (href && isUrl) {
+      setError(null);
+
+      fetch(
+        `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
+          href,
+        )}&api_key=${KEY}&iframe=1&omit_script=1`,
+      )
+        .then((res) => res.json())
+        .then(
+          (res) => {
+            setIsLoaded(true);
+            if (res.html) {
+              setHtml({ __html: res.html });
+            } else if (res.error) {
+              setError({ code: res.error, message: res.message });
+            }
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          },
+        );
+    } else {
+      setError({ code: 400, message: 'Provide url attribute for the element' });
+    }
+  }, [href, isUrl]);
+
+  useEffect(() => {
+    (window as any).iframely && (window as any).iframely.load();
+  });
+
+  if (error) {
+    return (
+      <a
+        className={clsx({ 'str-chat__message-url-link': isUrl })}
+        href={href}
+        rel='nofollow noreferrer noopener'
+        target='_blank'
+      >
+        {children}
+      </a>
+    );
+  } else if (!error && !isLoaded) {
+    return <div />;
+  } else {
+    return <div dangerouslySetInnerHTML={html} />;
+  }
 };
 
 const Emoji = ({ children }: ReactMarkdownProps) => (
