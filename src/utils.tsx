@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, useEffect, useState } from 'react';
+import React, { ComponentProps, ComponentType, memo, useEffect, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -94,7 +94,7 @@ const KEY = '2ff2c1b746d605de30463e';
 
 type IFramelyError = { code: string | number; message: string };
 
-const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) => {
+const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isEmail = href?.startsWith('mailto:');
   const isUrl = href?.startsWith('http');
 
@@ -130,6 +130,13 @@ const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) =>
 
   const debouncedFetch = debounce(doFetch, 500);
 
+  useEffect(
+    () => () => {
+      debouncedFetch.cancel();
+    },
+    [],
+  );
+
   useEffect(() => {
     if (href && isUrl) {
       setError(null);
@@ -160,9 +167,11 @@ const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) =>
   } else if (!error && !isLoaded) {
     return <div />;
   } else {
-    return <div dangerouslySetInnerHTML={html} />;
+    return <div className={'str-chat__message-iframely'} dangerouslySetInnerHTML={html} />;
   }
 };
+
+const Anchor = memo(UnMemorizedAnchor);
 
 const Emoji = ({ children }: ReactMarkdownProps) => (
   <span className='inline-text-emoji' data-testid='inline-text-emoji'>
