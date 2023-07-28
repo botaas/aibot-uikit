@@ -128,7 +128,7 @@ const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) =>
             setIsLoaded(true);
             setError(error);
           },
-        );
+        ).catch((e) => console.error('iframely fetch error: ', e));
     } else {
       setError({ code: 400, message: 'Provide url attribute for the element' });
     }
