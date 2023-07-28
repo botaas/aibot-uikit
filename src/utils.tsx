@@ -15,6 +15,7 @@ import type { Element } from 'react-markdown/lib/ast-to-react';
 import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
+import debounce from 'lodash.debounce';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -103,32 +104,37 @@ const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) =>
     __html: '<div />',
   });
 
-  if (!href || (!isEmail && !isUrl)) return <>{children}</>;
+  const doFetch = (href: string) => {
+    fetch(
+      `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
+        href,
+      )}&api_key=${KEY}&iframe=1&omit_script=1`,
+    )
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          setIsLoaded(true);
+          if (res.html) {
+            setHtml({ __html: res.html });
+          } else if (res.error) {
+            setError({ code: res.error, message: res.message });
+          }
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        },
+      )
+      .catch((e) => console.error('iframely fetch error: ', e));
+  };
+
+  const debouncedFetch = debounce(doFetch, 500);
 
   useEffect(() => {
     if (href && isUrl) {
       setError(null);
 
-      fetch(
-        `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
-          href,
-        )}&api_key=${KEY}&iframe=1&omit_script=1`,
-      )
-        .then((res) => res.json())
-        .then(
-          (res) => {
-            setIsLoaded(true);
-            if (res.html) {
-              setHtml({ __html: res.html });
-            } else if (res.error) {
-              setError({ code: res.error, message: res.message });
-            }
-          },
-          (error) => {
-            setIsLoaded(true);
-            setError(error);
-          },
-        ).catch((e) => console.error('iframely fetch error: ', e));
+      debouncedFetch(href);
     } else {
       setError({ code: 400, message: 'Provide url attribute for the element' });
     }
@@ -137,6 +143,8 @@ const Anchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) =>
   useEffect(() => {
     (window as any).iframely && (window as any).iframely.load();
   });
+
+  if (!href || (!isEmail && !isUrl)) return <>{children}</>;
 
   if (error) {
     return (
