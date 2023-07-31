@@ -58,9 +58,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -103,6 +103,7 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
   const [html, setHtml] = useState<{ __html: string }>({
     __html: '<div />',
   });
+  const [mediaType, setMediaType] = useState('')
 
   const doFetch = (href: string) => {
     fetch(
@@ -116,6 +117,9 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
           setIsLoaded(true);
           if (res.html) {
             setHtml({ __html: res.html });
+            if (res.meta?.medium) {
+              setMediaType(res.meta?.medium);
+            }
           } else if (res.error) {
             setError({ code: res.error, message: res.message });
           }
@@ -167,7 +171,7 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
   } else if (!error && !isLoaded) {
     return <div />;
   } else {
-    return <div className={'str-chat__message-iframely'} dangerouslySetInnerHTML={html} />;
+    return <div className={`str-chat__message-iframely ${mediaType ? `str-chat__message-iframely-${mediaType}` : ''}`} dangerouslySetInnerHTML={html} />;
   }
 };
 
@@ -284,10 +288,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
