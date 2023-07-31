@@ -394,6 +394,7 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
 
   return (
     <ReactMarkdown
+      className='str-chat__message-markdown'
       allowedElements={allowedMarkups}
       components={rehypeComponents}
       rehypePlugins={rehypePlugins}
