@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, memo, useEffect, useState } from 'react';
+import React, { ComponentProps, ComponentType, memo, useCallback, useEffect, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -58,9 +58,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -132,7 +132,7 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
       .catch((e) => console.error('iframely fetch error: ', e));
   };
 
-  const debouncedFetch = debounce(doFetch, 500);
+  const debouncedFetch = useCallback(debounce(doFetch, 500), []);
 
   useEffect(
     () => () => {
@@ -173,9 +173,8 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
   } else {
     return (
       <div
-        className={`str-chat__message-iframely ${
-          mediaType ? `str-chat__message-iframely-${mediaType}` : ''
-        }`}
+        className={`str-chat__message-iframely ${mediaType ? `str-chat__message-iframely-${mediaType}` : ''
+          }`}
         dangerouslySetInnerHTML={html}
       />
     );
@@ -295,10 +294,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
