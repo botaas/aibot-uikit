@@ -237,11 +237,11 @@ const MessageInputV2 = <
   const displayQuotedMessage = !message && quotedMessage && !quotedMessage.parent_id;
 
   // 编辑消息、引用消息不可以语音输入
-  const displayVoiceInput = !message && !displayQuotedMessage && voice && voiceInputIsEnabled
+  const displayVoiceInput = !message && !displayQuotedMessage && voice && voiceInputIsEnabled;
 
   // 语音输入
   if (displayVoiceInput) {
-    return <VoiceInput />
+    return <VoiceInput />;
   }
 
   // 文本输入
@@ -262,7 +262,6 @@ const MessageInputV2 = <
         {displayQuotedMessage && <QuotedMessagePreviewHeader />}
 
         <div className='str-chat__message-input-inner'>
-
           {/* TODO rename class names */}
           <div
             className='str-chat__file-input-container'
@@ -291,7 +290,7 @@ const MessageInputV2 = <
               </label>
             </div>
           )}
-          
+
           <div className='str-chat__message-textarea-container'>
             {displayQuotedMessage && <QuotedMessagePreview quotedMessage={quotedMessage} />}
 
