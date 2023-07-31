@@ -105,7 +105,7 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
   });
   const [mediaType, setMediaType] = useState('');
 
-  const doFetch = (href: string) => {
+  const doFetch = useCallback((href: string) => {
     fetch(
       `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
         href,
@@ -130,9 +130,9 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
         },
       )
       .catch((e) => console.error('iframely fetch error: ', e));
-  };
+  }, []);
 
-  const debouncedFetch = useCallback(debounce(doFetch, 500), []);
+  const debouncedFetch = useCallback(debounce(doFetch, 500), [doFetch]);
 
   useEffect(
     () => () => {
