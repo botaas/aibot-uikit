@@ -138,7 +138,7 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
     () => () => {
       debouncedFetch.cancel();
     },
-    [],
+    [debouncedFetch],
   );
 
   useEffect(() => {
