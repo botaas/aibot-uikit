@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Components,
+  ItemProps,
   ScrollSeekConfiguration,
   ScrollSeekPlaceholderProps,
   Virtuoso,
@@ -36,7 +37,7 @@ import {
   OneChatMessage,
   useChannelStateContext,
 } from '../../context/ChannelStateContext';
-import { useChatContext } from '../../context/ChatContext';
+import { CustomClasses, useChatContext } from '../../context/ChatContext';
 import { useComponentContext } from '../../context/ComponentContext';
 import { isDate } from '../../context/TranslationContext';
 
@@ -94,6 +95,49 @@ function calculateInitialTopMostItemIndex(
   }
   return messages.length - 1;
 }
+
+type VirtualizedMessageListVirtuosoContext<
+  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
+> = {
+  processedMessages: OneChatMessage<OneChatGenerics>[];
+  messageGroupStyles: Record<string, GroupStyle>;
+  numItemsPrepended: number;
+  customClasses?: CustomClasses;
+}
+
+const VirtualizedMessageListVirtuosoItem = (props: ItemProps & {
+  context?: unknown;
+}) => {
+  const {
+    context,
+    ...otherProps
+  } = props;
+
+  const {
+    processedMessages,
+    messageGroupStyles,
+    numItemsPrepended,
+    customClasses,
+  } = context as VirtualizedMessageListVirtuosoContext
+
+  const streamMessageIndex = props['data-item-index'] + numItemsPrepended - PREPEND_OFFSET;
+  const message = processedMessages[streamMessageIndex];
+  const groupStyles: GroupStyle = messageGroupStyles[message.id] || '';
+
+  // using 'display: inline-block'
+  // traps CSS margins of the item elements, preventing incorrect item measurements
+  return (
+    <div
+      {...otherProps}
+      className={
+        customClasses?.virtualMessage ||
+        clsx('str-chat__virtual-list-message-wrapper str-chat__li', {
+          [`str-chat__li--${groupStyles}`]: groupStyles,
+        })
+      }
+    />
+  );
+};
 
 const VirtualizedMessageListWithContext = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -363,34 +407,6 @@ const VirtualizedMessageListWithContext = <
     [customMessageRenderer, shouldGroupByUser, numItemsPrepended],
   );
 
-  const Item = useMemo(() => {
-    // using 'display: inline-block'
-    // traps CSS margins of the item elements, preventing incorrect item measurements
-    const Item: Components['Item'] = (props) => {
-      const streamMessageIndex = props['data-item-index'] + numItemsPrepended - PREPEND_OFFSET;
-      const message = processedMessages[streamMessageIndex];
-      const groupStyles: GroupStyle = messageGroupStyles[message.id] || '';
-
-      return (
-        <div
-          {...props}
-          className={
-            customClasses?.virtualMessage ||
-            clsx('str-chat__virtual-list-message-wrapper str-chat__li', {
-              [`str-chat__li--${groupStyles}`]: groupStyles,
-            })
-          }
-        />
-      );
-    };
-    return Item;
-  }, [
-    customClasses?.virtualMessage,
-    numItemsPrepended,
-    // processedMessages were incorrectly rebuilt with a new object identity at some point, hence the .length usage
-    processedMessages.length,
-  ]);
-
   const virtuosoComponents: Partial<Components> = useMemo(() => {
     const EmptyPlaceholder: Components['EmptyPlaceholder'] = () => (
       <>
@@ -416,9 +432,9 @@ const VirtualizedMessageListWithContext = <
       EmptyPlaceholder,
       Footer,
       Header,
-      Item,
+      Item: VirtualizedMessageListVirtuosoItem,
     };
-  }, [loadingMore, head, Item]);
+  }, [loadingMore, head]);
 
   const atBottomStateChange = (isAtBottom: boolean) => {
     atBottom.current = isAtBottom;
@@ -456,6 +472,12 @@ const VirtualizedMessageListWithContext = <
       <MessageListMainPanel>
         <div className={customClasses?.virtualizedMessageList || 'str-chat__virtual-list'}>
           <Virtuoso
+            context={{
+              processedMessages,
+              messageGroupStyles,
+              numItemsPrepended,
+              customClasses,
+            }}
             atBottomStateChange={atBottomStateChange}
             atBottomThreshold={200}
             className='str-chat__message-list-scroll'
