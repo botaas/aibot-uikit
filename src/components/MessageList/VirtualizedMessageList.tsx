@@ -103,22 +103,21 @@ type VirtualizedMessageListVirtuosoContext<
   messageGroupStyles: Record<string, GroupStyle>;
   numItemsPrepended: number;
   customClasses?: CustomClasses;
-}
+};
 
-const VirtualizedMessageListVirtuosoItem = (props: ItemProps & {
-  context?: unknown;
-}) => {
-  const {
-    context,
-    ...otherProps
-  } = props;
+const VirtualizedMessageListVirtuosoItem = (
+  props: ItemProps & {
+    context?: unknown;
+  },
+) => {
+  const { context, ...otherProps } = props;
 
   const {
     processedMessages,
     messageGroupStyles,
     numItemsPrepended,
     customClasses,
-  } = context as VirtualizedMessageListVirtuosoContext
+  } = context as VirtualizedMessageListVirtuosoContext;
 
   const streamMessageIndex = props['data-item-index'] + numItemsPrepended - PREPEND_OFFSET;
   const message = processedMessages[streamMessageIndex];

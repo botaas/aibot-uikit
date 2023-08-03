@@ -23,6 +23,7 @@ import {
 import { useChatContext } from '../../context/ChatContext';
 import { useComponentContext } from '../../context/ComponentContext';
 import { MessageContextValue, useMessageContext } from '../../context/MessageContext';
+import { IFramelyProvider } from '../../context/IFramelyContext';
 
 import type { MessageUIComponentProps } from './types';
 
@@ -125,81 +126,83 @@ const MessageSimpleWithContext = <
         </Modal>
       )}
       {
-        <div className={rootClassName} key={message.id}>
-          {themeVersion === '1' && <MessageStatus />}
-          {message.user && (
-            <Avatar
-              image={message.user.image}
-              name={message.user.name || message.user.id}
-              onClick={onUserClick}
-              onMouseOver={onUserHover}
-              user={message.user}
-            />
-          )}
-          <div
-            className={clsx('str-chat__message-inner', {
-              'str-chat__simple-message--error-failed': allowRetry,
-            })}
-            data-testid='message-inner'
-            onClick={allowRetry ? () => handleRetry(message) : undefined}
-            onKeyUp={allowRetry ? () => handleRetry(message) : undefined}
-          >
-            <MessageOptions />
-            <div className='str-chat__message-reactions-host'>
-              {hasReactions && isReactionEnabled && <ReactionsList reverse />}
-              {showDetailedReactions && isReactionEnabled && (
-                <ReactionSelector ref={reactionSelectorRef} />
-              )}
-            </div>
-            <div className='str-chat__message-bubble'>
-              {message.attachments?.length && !message.quoted_message ? (
-                <Attachment actionHandler={handleAction} attachments={message.attachments} />
-              ) : null}
-              <MessageText message={message} renderText={renderText} />
-              {message.mml && (
-                <MML
-                  actionHandler={handleAction}
-                  align={isMyMessage() ? 'right' : 'left'}
-                  source={message.mml}
+        <IFramelyProvider>
+          <div className={rootClassName} key={message.id}>
+            {themeVersion === '1' && <MessageStatus />}
+            {message.user && (
+              <Avatar
+                image={message.user.image}
+                name={message.user.name || message.user.id}
+                onClick={onUserClick}
+                onMouseOver={onUserHover}
+                user={message.user}
+              />
+            )}
+            <div
+              className={clsx('str-chat__message-inner', {
+                'str-chat__simple-message--error-failed': allowRetry,
+              })}
+              data-testid='message-inner'
+              onClick={allowRetry ? () => handleRetry(message) : undefined}
+              onKeyUp={allowRetry ? () => handleRetry(message) : undefined}
+            >
+              <MessageOptions />
+              <div className='str-chat__message-reactions-host'>
+                {hasReactions && isReactionEnabled && <ReactionsList reverse />}
+                {showDetailedReactions && isReactionEnabled && (
+                  <ReactionSelector ref={reactionSelectorRef} />
+                )}
+              </div>
+              <div className='str-chat__message-bubble'>
+                {message.attachments?.length && !message.quoted_message ? (
+                  <Attachment actionHandler={handleAction} attachments={message.attachments} />
+                ) : null}
+                <MessageText message={message} renderText={renderText} />
+                {message.mml && (
+                  <MML
+                    actionHandler={handleAction}
+                    align={isMyMessage() ? 'right' : 'left'}
+                    source={message.mml}
+                  />
+                )}
+                {themeVersion === '2' && <MessageErrorIcon />}
+              </div>
+              {showReplyCountButton && themeVersion === '1' && (
+                <MessageRepliesCountButton
+                  onClick={handleOpenThread}
+                  reply_count={message.reply_count}
                 />
               )}
-              {themeVersion === '2' && <MessageErrorIcon />}
+              {showMetadata && themeVersion === '1' && (
+                <div className='str-chat__message-data str-chat__message-simple-data'>
+                  {!isMyMessage() && message.user && showName ? (
+                    <span className='str-chat__message-simple-name'>
+                      {message.user.name || message.user.id}
+                    </span>
+                  ) : null}
+                  <MessageTimestamp calendar customClass='str-chat__message-simple-timestamp' />
+                </div>
+              )}
             </div>
-            {showReplyCountButton && themeVersion === '1' && (
+            {showReplyCountButton && themeVersion === '2' && (
               <MessageRepliesCountButton
                 onClick={handleOpenThread}
                 reply_count={message.reply_count}
               />
             )}
-            {showMetadata && themeVersion === '1' && (
-              <div className='str-chat__message-data str-chat__message-simple-data'>
-                {!isMyMessage() && message.user && showName ? (
+            {showMetadata && themeVersion === '2' && (
+              <div className='str-chat__message-data str-chat__message-simple-data str-chat__message-metadata'>
+                <MessageStatus />
+                {!isMyMessage() && !!message.user && showName && (
                   <span className='str-chat__message-simple-name'>
                     {message.user.name || message.user.id}
                   </span>
-                ) : null}
+                )}
                 <MessageTimestamp calendar customClass='str-chat__message-simple-timestamp' />
               </div>
             )}
           </div>
-          {showReplyCountButton && themeVersion === '2' && (
-            <MessageRepliesCountButton
-              onClick={handleOpenThread}
-              reply_count={message.reply_count}
-            />
-          )}
-          {showMetadata && themeVersion === '2' && (
-            <div className='str-chat__message-data str-chat__message-simple-data str-chat__message-metadata'>
-              <MessageStatus />
-              {!isMyMessage() && !!message.user && showName && (
-                <span className='str-chat__message-simple-name'>
-                  {message.user.name || message.user.id}
-                </span>
-              )}
-              <MessageTimestamp calendar customClass='str-chat__message-simple-timestamp' />
-            </div>
-          )}
-        </div>
+        </IFramelyProvider>
       }
     </>
   );

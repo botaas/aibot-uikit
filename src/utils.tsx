@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import React, { ComponentProps, ComponentType, memo, useCallback, useEffect, useMemo } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -16,6 +16,7 @@ import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
 import debounce from 'lodash.debounce';
+import { useIFramelyContext } from './context/IFramelyContext';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -58,9 +59,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-      const i = singleMatch.exec(match);
-      return i && [i[1], i[2]];
-    })
+        const i = singleMatch.exec(match);
+        return i && [i[1], i[2]];
+      })
     : [];
 
   return links.flat();
@@ -90,50 +91,21 @@ function encodeDecode(url: string) {
   }
 }
 
-const KEY = '2ff2c1b746d605de30463e';
-
-type IFramelyError = { code: string | number; message: string };
-
+/**
+ * 每次解析 markdown，链接都会创建一个新的 <a> 实例
+ */
 const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isEmail = href?.startsWith('mailto:');
   const isUrl = href?.startsWith('http');
 
-  const [error, setError] = useState<IFramelyError | null>(null);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [html, setHtml] = useState<{ __html: string }>({
-    __html: '<div />',
-  });
-  const [mediaType, setMediaType] = useState('');
-
-  const doFetch = useCallback((href: string) => {
-    fetch(
-      `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
-        href,
-      )}&api_key=${KEY}&iframe=1&omit_script=1`,
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => {
-          setIsLoaded(true);
-          if (res.html) {
-            setHtml({ __html: res.html });
-            if (res.meta?.medium) {
-              setMediaType(res.meta?.medium);
-            }
-          } else if (res.error) {
-            setError({ code: res.error, message: res.message });
-          }
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        },
-      )
-      .catch((e) => console.error('iframely fetch error: ', e));
-  }, []);
-
+  // 打字机效果追加文本后，重新解析 markdown，原来的 <a> 就被销毁了，因此延时避免查询不完整的 href
+  const { results, doFetch } = useIFramelyContext('UnMemorizedAnchor');
   const debouncedFetch = useCallback(debounce(doFetch, 500), [doFetch]);
 
+  // 缓存的查询结果
+  const iframely = useMemo(() => (href ? results[href] : undefined), [href, results]);
+
+  // <a> 被销毁，取消查询
   useEffect(
     () => () => {
       debouncedFetch.cancel();
@@ -141,15 +113,12 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
     [debouncedFetch],
   );
 
+  // 新的 <a> 标签进行查询
   useEffect(() => {
-    if (href && isUrl) {
-      setError(null);
-
+    if (!iframely && href && isUrl) {
       debouncedFetch(href);
-    } else {
-      setError({ code: 400, message: 'Provide url attribute for the element' });
     }
-  }, [href, isUrl]);
+  }, [iframely, href, isUrl]);
 
   useEffect(() => {
     (window as any).iframely && (window as any).iframely.load();
@@ -157,7 +126,11 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
 
   if (!href || (!isEmail && !isUrl)) return <>{children}</>;
 
-  if (error) {
+  if (!iframely) {
+    return <div />;
+  }
+
+  if (iframely.error) {
     return (
       <a
         className={clsx({ 'str-chat__message-url-link': isUrl })}
@@ -168,17 +141,17 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
         {children}
       </a>
     );
-  } else if (!error && !isLoaded) {
-    return <div />;
-  } else {
-    return (
-      <div
-        className={`str-chat__message-iframely ${mediaType ? `str-chat__message-iframely-${mediaType}` : ''
-          }`}
-        dangerouslySetInnerHTML={html}
-      />
-    );
   }
+
+  return (
+    <div
+      key={href}
+      className={`str-chat__message-iframely ${
+        iframely.mediaType ? `str-chat__message-iframely-${iframely.mediaType}` : ''
+      }`}
+      dangerouslySetInnerHTML={{ __html: iframely.html ?? '<div/>' }}
+    />
+  );
 };
 
 const Anchor = memo(UnMemorizedAnchor);
@@ -294,10 +267,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-  Partial<{
-    emoji: ComponentType<ReactMarkdownProps>;
-    mention: ComponentType<MentionProps<OneChatGenerics>>;
-  }>;
+    Partial<{
+      emoji: ComponentType<ReactMarkdownProps>;
+      mention: ComponentType<MentionProps<OneChatGenerics>>;
+    }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
