@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, memo, useCallback, useEffect, useMemo } from 'react';
+import React, { ComponentProps, ComponentType, memo, useEffect, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -15,8 +15,7 @@ import type { Element } from 'react-markdown/lib/ast-to-react';
 import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
-import debounce from 'lodash.debounce';
-import { useIFramelyContext } from './context/IFramelyContext';
+import { delayRender } from './context/DelayRenderContext';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -59,9 +58,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -91,46 +90,38 @@ function encodeDecode(url: string) {
   }
 }
 
-/**
- * 每次解析 markdown，链接都会创建一个新的 <a> 实例
- */
-const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdownProps) => {
-  const isEmail = href?.startsWith('mailto:');
+const KEY = '2ff2c1b746d605de30463e';
+
+const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
   const isUrl = href?.startsWith('http');
+  const [state, setState] = useState<{ html?: string; mediaType?: string }>();
 
-  // 打字机效果追加文本后，重新解析 markdown，原来的 <a> 就被销毁了，因此延时避免查询不完整的 href
-  const { results, doFetch } = useIFramelyContext('UnMemorizedAnchor');
-  const debouncedFetch = useCallback(debounce(doFetch, 500), [doFetch]);
-
-  // 缓存的查询结果
-  const iframely = useMemo(() => (href ? results[href] : undefined), [href, results]);
-
-  // <a> 被销毁，取消查询
-  useEffect(
-    () => () => {
-      debouncedFetch.cancel();
-    },
-    [debouncedFetch],
-  );
-
-  // 新的 <a> 标签进行查询
   useEffect(() => {
-    if (!iframely && href && isUrl) {
-      debouncedFetch(href);
+    if (href && isUrl) {
+      fetch(
+        `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
+          href,
+        )}&api_key=${KEY}&iframe=1&omit_script=1`,
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.error) {
+            console.warn('fetch iframely error: ', res.error);
+          } else {
+            setState({
+              html: res.html,
+              mediaType: res.meta?.medium,
+            });
+          }
+        });
     }
-  }, [iframely, href, isUrl]);
+  }, [href]);
 
   useEffect(() => {
     (window as any).iframely && (window as any).iframely.load();
   });
 
-  if (!href || (!isEmail && !isUrl)) return <>{children}</>;
-
-  if (!iframely) {
-    return <div />;
-  }
-
-  if (iframely.error) {
+  if (!state || !state.html) {
     return (
       <a
         className={clsx({ 'str-chat__message-url-link': isUrl })}
@@ -145,16 +136,16 @@ const UnMemorizedAnchor = ({ children, href }: ComponentProps<'a'> & ReactMarkdo
 
   return (
     <div
-      key={href}
-      className={`str-chat__message-iframely ${
-        iframely.mediaType ? `str-chat__message-iframely-${iframely.mediaType}` : ''
-      }`}
-      dangerouslySetInnerHTML={{ __html: iframely.html ?? '<div/>' }}
+      className={`str-chat__message-iframely ${state.mediaType ? `str-chat__message-iframely-${state.mediaType}` : ''
+        }`}
+      dangerouslySetInnerHTML={{ __html: state.html }}
     />
   );
 };
 
-const Anchor = memo(UnMemorizedAnchor);
+const IframelyRender = memo(UnMemorizedIframelyRender);
+
+const Anchor = memo(delayRender('href', IframelyRender));
 
 const Emoji = ({ children }: ReactMarkdownProps) => (
   <span className='inline-text-emoji' data-testid='inline-text-emoji'>
@@ -267,10 +258,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(

@@ -7,6 +7,7 @@ import { CustomStyles, darkModeTheme, useCustomStyles } from './hooks/useCustomS
 
 import { ChatProvider, CustomClasses, ThemeVersion } from '../../context/ChatContext';
 import { SupportedTranslations, TranslationProvider } from '../../context/TranslationContext';
+import { DelayRenderProvider } from '../../context/DelayRenderContext';
 
 import type { OneChati18n } from '../../i18n/OneChati18n';
 
@@ -119,8 +120,10 @@ export const Chat = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOne
   if (!translators.t) return null;
 
   return (
-    <ChatProvider value={chatContextValue}>
-      <TranslationProvider value={translators}>{children}</TranslationProvider>
-    </ChatProvider>
+    <DelayRenderProvider>
+      <ChatProvider value={chatContextValue}>
+        <TranslationProvider value={translators}>{children}</TranslationProvider>
+      </ChatProvider>
+    </DelayRenderProvider>
   );
 };

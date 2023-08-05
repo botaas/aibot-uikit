@@ -14,7 +14,6 @@ import { useChatContext } from '../../context/ChatContext';
 import { useComponentContext } from '../../context/ComponentContext';
 import { useMessageContext } from '../../context/MessageContext';
 import { useTranslationContext } from '../../context/TranslationContext';
-import { IFramelyProvider } from '../../context/IFramelyContext';
 import { renderText } from '../../utils';
 
 import type { OneChatMessage } from '../../context/ChannelStateContext';
@@ -90,59 +89,57 @@ const UnMemoizedFixedHeightMessage = <
   const images = message?.attachments?.filter(({ type }) => type === 'image');
 
   return (
-    <IFramelyProvider>
-      <div
-        className={`str-chat__virtual-message__wrapper ${
-          role.isMyMessage ? 'str-chat__virtual-message__wrapper--me' : ''
-        } ${groupedByUser ? 'str-chat__virtual-message__wrapper--group' : ''}`}
-        key={message.id}
-      >
-        {message.user && (
-          <Avatar
-            image={message.user.image}
-            name={message.user.name || message.user.id}
-            shape='rounded'
-            size={38}
-            user={message.user}
-          />
-        )}
-        <div className='str-chat__virtual-message__content'>
-          <div className='str-chat__virtual-message__meta'>
-            <div className='str-chat__virtual-message__author' style={{ color: userColor }}>
-              <strong>{message.user?.name || 'unknown'}</strong>
-            </div>
+    <div
+      className={`str-chat__virtual-message__wrapper ${
+        role.isMyMessage ? 'str-chat__virtual-message__wrapper--me' : ''
+      } ${groupedByUser ? 'str-chat__virtual-message__wrapper--group' : ''}`}
+      key={message.id}
+    >
+      {message.user && (
+        <Avatar
+          image={message.user.image}
+          name={message.user.name || message.user.id}
+          shape='rounded'
+          size={38}
+          user={message.user}
+        />
+      )}
+      <div className='str-chat__virtual-message__content'>
+        <div className='str-chat__virtual-message__meta'>
+          <div className='str-chat__virtual-message__author' style={{ color: userColor }}>
+            <strong>{message.user?.name || 'unknown'}</strong>
           </div>
-          {message.deleted_at || message.type === 'deleted' ? (
-            <MessageDeleted message={message} />
-          ) : (
-            <>
-              {images && <Gallery images={images} />}
-              <div className='str-chat__virtual-message__text' data-testid='msg-text'>
-                {renderedText}
-                {message.mml && (
-                  <MML actionHandler={handleAction} align='left' source={message.mml} />
-                )}
-                <div className='str-chat__virtual-message__data'>
-                  <MessageActions
-                    customWrapperClass='str-chat__virtual-message__actions'
-                    getMessageActions={messageActionsHandler}
-                    handleDelete={handleDelete}
-                    message={message}
-                    mine={() => role.isMyMessage}
-                  />
-                  <span className='str-chat__virtual-message__date'>
-                    <MessageTimestamp
-                      customClass='str-chat__message-simple-timestamp'
-                      message={message}
-                    />
-                  </span>
-                </div>
-              </div>
-            </>
-          )}
         </div>
+        {message.deleted_at || message.type === 'deleted' ? (
+          <MessageDeleted message={message} />
+        ) : (
+          <>
+            {images && <Gallery images={images} />}
+            <div className='str-chat__virtual-message__text' data-testid='msg-text'>
+              {renderedText}
+              {message.mml && (
+                <MML actionHandler={handleAction} align='left' source={message.mml} />
+              )}
+              <div className='str-chat__virtual-message__data'>
+                <MessageActions
+                  customWrapperClass='str-chat__virtual-message__actions'
+                  getMessageActions={messageActionsHandler}
+                  handleDelete={handleDelete}
+                  message={message}
+                  mine={() => role.isMyMessage}
+                />
+                <span className='str-chat__virtual-message__date'>
+                  <MessageTimestamp
+                    customClass='str-chat__message-simple-timestamp'
+                    message={message}
+                  />
+                </span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </IFramelyProvider>
+    </div>
   );
 };
 
