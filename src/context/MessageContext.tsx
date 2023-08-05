@@ -2,6 +2,8 @@ import React, { PropsWithChildren, useContext } from 'react';
 
 import type { ChannelActionContextValue } from './ChannelActionContext';
 import type { OneChatMessage } from './ChannelStateContext';
+import { DelayRenderProvider } from './DelayRenderContext';
+import { IframelyProvider } from './IframelyContext';
 
 import type { ActionHandlerReturnType } from '../components/Message/hooks/useActionHandler';
 import type { PinPermissions } from '../components/Message/hooks/usePinHandler';
@@ -130,9 +132,13 @@ export const MessageProvider = <
 }: PropsWithChildren<{
   value: MessageContextValue<OneChatGenerics>;
 }>) => (
-  <MessageContext.Provider value={(value as unknown) as MessageContextValue}>
-    {children}
-  </MessageContext.Provider>
+  <DelayRenderProvider>
+    <IframelyProvider>
+      <MessageContext.Provider value={(value as unknown) as MessageContextValue}>
+        {children}
+      </MessageContext.Provider>
+    </IframelyProvider>
+  </DelayRenderProvider>
 );
 
 export const useMessageContext = <

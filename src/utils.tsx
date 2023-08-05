@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, memo, useEffect, useState } from 'react';
+import React, { ComponentProps, ComponentType, memo, useEffect, useMemo } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -16,6 +16,7 @@ import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
 import { delayRender } from './context/DelayRenderContext';
+import { useIframelyContext } from './context/IframelyContext';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -94,10 +95,11 @@ const KEY = '2ff2c1b746d605de30463e';
 
 const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
   const isUrl = href?.startsWith('http');
-  const [state, setState] = useState<{ html?: string; mediaType?: string }>();
+  const { iframes, setIframe } = useIframelyContext();
+  const iframe = useMemo(() => (href ? iframes[href] : undefined), [href, iframes]);
 
   useEffect(() => {
-    if (href && isUrl) {
+    if ((!iframe || iframe.error) && href && isUrl) {
       fetch(
         `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
           href,
@@ -107,21 +109,26 @@ const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
         .then((res) => {
           if (res.error) {
             console.warn('fetch iframely error: ', res.error);
+            setIframe(href, { error: res.error });
           } else {
-            setState({
+            setIframe(href, {
               html: res.html,
               mediaType: res.meta?.medium,
             });
           }
+        })
+        .catch(error => {
+          console.warn('fetch iframely error: ', error);
+          setIframe(href, { error });
         });
     }
-  }, [href]);
+  }, [href, iframe]);
 
   useEffect(() => {
     (window as any).iframely && (window as any).iframely.load();
   });
 
-  if (!state || !state.html) {
+  if (!iframe) {
     return (
       <a
         className={clsx({ 'str-chat__message-url-link': isUrl })}
@@ -131,14 +138,14 @@ const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
       >
         {children}
       </a>
-    );
+    )
   }
 
   return (
     <div
-      className={`str-chat__message-iframely ${state.mediaType ? `str-chat__message-iframely-${state.mediaType}` : ''
+      className={`str-chat__message-iframely ${iframe.mediaType ? `str-chat__message-iframely-${iframe.mediaType}` : ''
         }`}
-      dangerouslySetInnerHTML={{ __html: state.html }}
+      dangerouslySetInnerHTML={{ __html: iframe.html ?? '' }}
     />
   );
 };
