@@ -95,6 +95,7 @@ const KEY = '2ff2c1b746d605de30463e';
 
 const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
   const isUrl = href?.startsWith('http');
+  // markdown 解析过程中，会一直重建新的实例，所以将 iframely 查询结果放到 context 中，这样避免新实例一直重复查询
   const { iframes, setIframe } = useIframelyContext();
   const iframe = useMemo(() => (href ? iframes[href] : undefined), [href, iframes]);
 
