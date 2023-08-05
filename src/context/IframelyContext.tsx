@@ -5,7 +5,7 @@ import type { UnknownType } from '../types';
 export type Iframely = {
   html?: string;
   mediaType?: string;
-  error?: unknown
+  error?: unknown;
 };
 
 type IframelyState = {
