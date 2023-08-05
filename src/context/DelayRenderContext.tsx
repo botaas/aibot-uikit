@@ -101,7 +101,7 @@ export const useDelayRender = (
     // TODO iframely 的 props 除了 href 以外，还有其他参数在解析 markdown 时候一直变化
     // 因此这里如果监听了 props，最后是等到解析 markdown 完成以后才会渲染
     // 如果不监听 props，那么链接完整以后就会渲染
-    [keyValue, props],
+    [keyValue, /*props*/],
   );
 
   useEffect(() => {
