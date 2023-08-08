@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, memo, useEffect, useMemo } from 'react';
+import React, { ComponentProps, ComponentType, useEffect, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -15,8 +15,7 @@ import type { Element } from 'react-markdown/lib/ast-to-react';
 import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
-import { delayRender } from './context/DelayRenderContext';
-import { useIframelyContext } from './context/IframelyContext';
+import { delayRender } from './hooks/useDelayRender';
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -93,15 +92,14 @@ function encodeDecode(url: string) {
 
 const KEY = '2ff2c1b746d605de30463e';
 
-const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
+const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isUrl = href?.startsWith('http');
-  // 虽然用 delayRender 缓存了，但是每次 unmount & mount 依然会重置状态
-  // 所以将 iframely 查询结果放到 context 中，这样避免新实例一直重复查询
-  const { iframes, setIframe } = useIframelyContext();
-  const iframe = useMemo(() => (href ? iframes[href] : undefined), [href, iframes]);
+  const [error, setError] = useState<unknown>();
+  const [html, setHtml] = useState('');
+  const [mediaType, setMediaType] = useState('');
 
   useEffect(() => {
-    if ((!iframe || iframe.error) && href && isUrl) {
+    if (href && isUrl) {
       fetch(
         `https://cdn.iframe.ly/api/iframely?url=${encodeURIComponent(
           href,
@@ -111,26 +109,24 @@ const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
         .then((res) => {
           if (res.error) {
             console.warn('fetch iframely error: ', res.error);
-            setIframe(href, { error: res.error });
+            setError(res.error);
           } else {
-            setIframe(href, {
-              html: res.html,
-              mediaType: res.meta?.medium,
-            });
+            setHtml(res.html);
+            setMediaType(res.meta?.medium);
           }
         })
         .catch((error) => {
           console.warn('fetch iframely error: ', error);
-          setIframe(href, { error });
+          setError(error);
         });
     }
-  }, [href, iframe]);
+  }, []);
 
-  useEffect(() => {
-    (window as any).iframely && (window as any).iframely.load();
-  });
+  if (!error && !html) {
+    return <></>;
+  }
 
-  if (!iframe) {
+  if (error) {
     return (
       <a
         className={clsx({ 'str-chat__message-url-link': isUrl })}
@@ -146,16 +142,15 @@ const UnMemorizedIframelyRender = ({ href, children }: ComponentProps<'a'>) => {
   return (
     <div
       className={`str-chat__message-iframely ${
-        iframe.mediaType ? `str-chat__message-iframely-${iframe.mediaType}` : ''
+        mediaType ? `str-chat__message-iframely-${mediaType}` : ''
       }`}
-      dangerouslySetInnerHTML={{ __html: iframe.html ?? '' }}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 };
 
-const IframelyRender = memo(UnMemorizedIframelyRender);
-
-const Anchor = memo(delayRender('href', IframelyRender));
+// streaming 模式下一直追加文本，因此需要延时渲染等待 href 完整
+const Anchor = delayRender<ComponentProps<'a'> & ReactMarkdownProps>('href', IframelyRender);
 
 const Emoji = ({ children }: ReactMarkdownProps) => (
   <span className='inline-text-emoji' data-testid='inline-text-emoji'>
@@ -285,15 +280,20 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
   if (text.trim().length === 1) return <>{text}</>;
 
   let newText = text;
+
+  // TODO 补全结尾不完整的 markdown 链接，否则 streaming 模式下追加消息文本的过程，会解析错误
+  if (/\[([^[]+)\]\(http(s?):\/\/([^)]+)$/.test(newText)) {
+    newText = newText + ')';
+  }
+
   const markdownLinks = matchMarkdownLinks(newText);
   const codeBlocks = messageCodeBlocks(newText);
-
   // extract all valid links/emails within text and replace it with proper markup
   uniqBy([...find(newText, 'email'), ...find(newText, 'url')], 'value').forEach(
     ({ href, type, value }) => {
       const linkIsInBlock = codeBlocks.some((block) => block?.includes(value));
 
-      // check if message is already  markdown
+      // check if message is already markdown
       const noParsingNeeded =
         markdownLinks &&
         markdownLinks.filter((text) => {
