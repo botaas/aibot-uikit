@@ -44,6 +44,12 @@ const allowedMarkups: Array<keyof JSX.IntrinsicElements | 'emoji' | 'mention'> =
   'pre',
   'blockquote',
   'del',
+  'table',
+  'tbody',
+  'td',
+  'th',
+  'thead',
+  'tr',
   // custom types (tagNames)
   'emoji',
   'mention',
