@@ -281,7 +281,7 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
 
   let newText = text;
 
-  // TODO 补全结尾不完整的 markdown 链接，否则 streaming 模式下追加消息文本的过程，会解析错误
+  // TODO 补全结尾不完整的 markdown 链接，否则 streaming 模式下追加文本时，遇到不完整的链接，会解析错误
   if (/\[([^[]+)\]\(http(s?):\/\/([^)]+)$/.test(newText)) {
     newText = newText + ')';
   }
