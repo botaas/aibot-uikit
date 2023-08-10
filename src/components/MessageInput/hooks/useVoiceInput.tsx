@@ -1,10 +1,28 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useAudioRecorder } from 'react-audio-voice-recorder';
 import type { MessageInputReducerAction, MessageInputState } from './useMessageInputState';
 import type { FileLike } from 'react-file-utils';
 import type { DefaultOneChatGenerics, Message } from '../../../types';
+import useAudioRecorder from '../../../hooks/useAudioRecorder';
 import { useTranslationContext } from '../../../context/TranslationContext';
 import { getDateString } from '../../../i18n/utils';
+
+// 检测出当前支持的音频格式
+const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
+const audioCodecs = ["vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
+const supportedAudioTypes = (() => {
+  const types: string[] = [];
+  audioTypes.forEach(type => {
+    audioCodecs.forEach(codec => {
+      const mimeType = `audio/${type};codecs=${codec}`
+      if (MediaRecorder.isTypeSupported(mimeType)) {
+        types.push(mimeType)
+      }
+    })
+  });
+  return types
+})()
+const supportedAudiotype = supportedAudioTypes[0]
+console.log(`detech supported audio type ${supportedAudiotype}`)
 
 export const useVoiceInput = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -31,6 +49,10 @@ export const useVoiceInput = <
   } = useAudioRecorder({
     noiseSuppression: true,
     echoCancellation: true,
+  }, (err) => {
+    console.error('audio recording is not allowed.', err)
+  }, {
+    mimeType: supportedAudiotype
   });
 
   // 录音过程中，关闭语音输入，也会生成一段录音，但是应该废弃
@@ -101,7 +123,7 @@ export const useVoiceInput = <
     }
     // 得到新的有效录音
     // 文件格式 audio/webm?codec=xxxx
-    const type = recordingBlob.type.split(';')[0];
+    const type = (supportedAudiotype ?? recordingBlob.type).split(';')[0];
     // 文件后缀
     let ext = type.split('/')[1] ?? '';
     ext = ext ? `.${ext}` : '';

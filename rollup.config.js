@@ -48,7 +48,6 @@ const externalDependencies = [
   'nanoid',
   'pretty-bytes',
   'prop-types',
-  'react-audio-voice-recorder',
   'react-fast-compare',
   /react-file-utils/,
   'react-images',
