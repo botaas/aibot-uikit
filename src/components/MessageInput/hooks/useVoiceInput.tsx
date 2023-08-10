@@ -7,22 +7,38 @@ import { useTranslationContext } from '../../../context/TranslationContext';
 import { getDateString } from '../../../i18n/utils';
 
 // 检测出当前支持的音频格式
-const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
-const audioCodecs = ["vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
+const audioTypes = ['webm', 'ogg', 'mp3', 'x-matroska'];
+const audioCodecs = [
+  'vp9',
+  'vp9.0',
+  'vp8',
+  'vp8.0',
+  'avc1',
+  'av1',
+  'h265',
+  'h.265',
+  'h264',
+  'h.264',
+  'opus',
+  'pcm',
+  'aac',
+  'mpeg',
+  'mp4a',
+];
 const supportedAudioTypes = (() => {
   const types: string[] = [];
-  audioTypes.forEach(type => {
-    audioCodecs.forEach(codec => {
-      const mimeType = `audio/${type};codecs=${codec}`
+  audioTypes.forEach((type) => {
+    audioCodecs.forEach((codec) => {
+      const mimeType = `audio/${type};codecs=${codec}`;
       if (MediaRecorder.isTypeSupported(mimeType)) {
-        types.push(mimeType)
+        types.push(mimeType);
       }
-    })
+    });
   });
-  return types
-})()
-const supportedAudiotype = supportedAudioTypes[0]
-console.log(`detech supported audio type ${supportedAudiotype}`)
+  return types;
+})();
+const supportedAudiotype = supportedAudioTypes[0];
+console.log(`detech supported audio type ${supportedAudiotype}`);
 
 export const useVoiceInput = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
@@ -46,14 +62,18 @@ export const useVoiceInput = <
     recordingBlob,
     isRecording,
     recordingTime,
-  } = useAudioRecorder({
-    noiseSuppression: true,
-    echoCancellation: true,
-  }, (err) => {
-    console.error('audio recording is not allowed.', err)
-  }, {
-    mimeType: supportedAudiotype
-  });
+  } = useAudioRecorder(
+    {
+      noiseSuppression: true,
+      echoCancellation: true,
+    },
+    (err) => {
+      console.error('audio recording is not allowed.', err);
+    },
+    {
+      mimeType: supportedAudiotype,
+    },
+  );
 
   // 录音过程中，关闭语音输入，也会生成一段录音，但是应该废弃
   const deprecatedRecordingBlob = useRef<Blob | null>(null);

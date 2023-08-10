@@ -32,7 +32,7 @@ export const useCreateMessageInputContext = <
     focus,
     grow,
     voice,
-    maxVoiceDuration,
+    maxVoiceDuration = 60,
     voiceInputIsEnabled,
     enableVoiceInput,
     disableVoiceInput,

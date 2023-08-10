@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   KeyboardInputIcon as DefaultKeyboardInputIcon,
   VoiceInputIcon,
@@ -9,11 +9,14 @@ import { useMessageInputContext } from '../../context/MessageInputContext';
 import { useComponentContext } from '../../context/ComponentContext';
 import { useTranslationContext } from '../../context/TranslationContext';
 import type { DefaultOneChatGenerics } from '../../types';
+import useCountDown from '../../hooks/useCountDown';
 
 export const VoiceInput = <
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 >() => {
   const { t } = useTranslationContext('VoiceInput');
+
+  const { maxVoiceDuration = 60 } = useMessageInputContext('VoiceInput');
 
   const {
     numberOfUploads,
@@ -22,6 +25,19 @@ export const VoiceInput = <
     stopRecordingVoice,
     isRecordingVoice,
   } = useMessageInputContext<OneChatGenerics>('VoiceInput');
+
+  const [countDonwTargetDate, setCountDownTargetDate] = useState(
+    new Date(Date.now() + maxVoiceDuration * 1000),
+  );
+
+  useEffect(() => {
+    if (isRecordingVoice) {
+      // 重置倒计时时间
+      setCountDownTargetDate(new Date(Date.now() + maxVoiceDuration * 1000));
+    }
+  }, [isRecordingVoice]);
+
+  const [countDownLeft] = useCountDown({ targetDate: countDonwTargetDate });
 
   const { KeyboardInputIcon = DefaultKeyboardInputIcon } = useComponentContext<OneChatGenerics>(
     'VoiceInput',
@@ -62,7 +78,7 @@ export const VoiceInput = <
                   onClick={stopRecordingVoice}
                 >
                   <div className='str-chat__voice-recorder-icon str-chat__voice-recorder-stop'></div>
-                  <p>{t<string>('Send')}</p>
+                  <p>{t<string>('Send') + ` (${Math.ceil(countDownLeft / 1000)}s)`}</p>
                 </div>
               )
             }
