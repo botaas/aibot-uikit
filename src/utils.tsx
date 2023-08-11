@@ -64,9 +64,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -100,7 +100,7 @@ const KEY = '2ff2c1b746d605de30463e';
 
 const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isUrl = href?.startsWith('http');
-  const [error, setError] = useState<unknown>();
+  const [_error, setError] = useState<unknown>();
   const [html, setHtml] = useState('');
   const [mediaType, setMediaType] = useState('');
 
@@ -128,30 +128,26 @@ const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownP
     }
   }, []);
 
-  if (!error && !html) {
-    return <></>;
-  }
-
-  if (error) {
+  if (html && mediaType) {
+    // 多媒体类型，直接展开
     return (
-      <a
-        className={clsx({ 'str-chat__message-url-link': isUrl })}
-        href={href}
-        rel='nofollow noreferrer noopener'
-        target='_blank'
-      >
-        {children}
-      </a>
+      <div
+        className={`str-chat__message-iframely str-chat__message-iframely-${mediaType}`}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     );
   }
 
+  // 其他展示原始链接
   return (
-    <div
-      className={`str-chat__message-iframely ${
-        mediaType ? `str-chat__message-iframely-${mediaType}` : ''
-      }`}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <a
+      className={clsx({ 'str-chat__message-url-link': isUrl })}
+      href={href}
+      rel='nofollow noreferrer noopener'
+      target='_blank'
+    >
+      {children}
+    </a>
   );
 };
 
@@ -269,10 +265,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
