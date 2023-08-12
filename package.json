@@ -1,6 +1,6 @@
 {
   "name": "@openbot/aibot-uikit",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "React components to create chat conversations or livestream style chat",
   "author": "OpenBot",
   "homepage": "https://openbot.chat",
@@ -60,7 +60,8 @@
     "remark-gfm": "^3.0.1",
     "textarea-caret": "^3.1.0",
     "unist-builder": "^3.0.0",
-    "unist-util-visit": "^4.1.1"
+    "unist-util-visit": "^4.1.1",
+    "use-resize-observer": "^9.1.0"
   },
   "optionalDependencies": {
     "mml-react": "^0.4.7"

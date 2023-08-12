@@ -15,7 +15,6 @@ import { useGiphyPreview } from './hooks/useGiphyPreview';
 import { useNewMessageNotification } from './hooks/useNewMessageNotification';
 import { usePrependedMessagesCount } from './hooks/usePrependMessagesCount';
 import { useShouldForceScrollToBottom } from './hooks/useShouldForceScrollToBottom';
-import { useAutoScrollToBottom } from './hooks/useAutoScrollToBottom';
 import { MessageNotification as DefaultMessageNotification } from './MessageNotification';
 import { MessageListNotifications as DefaultMessageListNotifications } from './MessageListNotifications';
 import { MessageListMainPanel } from './MessageListMainPanel';
@@ -283,13 +282,6 @@ const VirtualizedMessageListWithContext = <
     jumpToLatestMessage,
   ]);
 
-  // 消息变化保持在底部
-  useAutoScrollToBottom<OneChatGenerics>({
-    messages,
-    atBottom,
-    scrollToBottom,
-  });
-
   const [newMessagesReceivedInBackground, setNewMessagesReceivedInBackground] = React.useState(
     false,
   );
@@ -390,7 +382,17 @@ const VirtualizedMessageListWithContext = <
 
       return (
         <Message
-          autoscrollToBottom={virtuoso.current?.autoscrollToBottom}
+          autoscrollToBottom={() => {
+            // virtuoso.current?.autoscrollToBottom()
+
+            // TODO 这里应该直接调上面 autoscrollToBottom 就可以了，virtuoso 应该会自己处理保持底部
+            // 但是实际没有效果，因此调 scrollToIndex 来处理
+            const behavior = followOutput(atBottom.current);
+            console.log(`followOutput atBottom: ${atBottom.current}, behavior: ${behavior}`);
+            if (behavior) {
+              virtuoso.current?.scrollToIndex({ index: 'LAST', behavior, align: 'end' });
+            }
+          }}
           closeReactionSelectorOnClick={closeReactionSelectorOnClick}
           customMessageActions={props.customMessageActions}
           endOfGroup={endOfGroup}
