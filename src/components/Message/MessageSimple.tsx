@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import useResizeObserver from 'use-resize-observer';
-import throttle from 'lodash.throttle';
-import debounce from 'lodash.debounce';
 
 import { MessageErrorIcon } from './icons';
 import { MessageDeleted as DefaultMessageDeleted } from './MessageDeleted';
@@ -115,37 +113,11 @@ const MessageSimpleWithContext = <
     },
   );
 
-  const debouncedAutoScrollToBottom = useCallback(
-    debounce(
-      () => {
-        autoscrollToBottom?.();
-      },
-      500,
-      { leading: false, trailing: true },
-    ),
-    [autoscrollToBottom],
-  );
-
-  const throttledAutoScrollToBottom = useCallback(
-    throttle(
-      () => {
-        autoscrollToBottom?.();
-      },
-      100,
-      { leading: true, trailing: true },
-    ),
-    [autoscrollToBottom],
-  );
-
   // iframely、markdown、图片懒加载等都可能导致消息气泡大小发生变化
   // 这里监听气泡大小不再变化以后，调整位置自动滑动到底部
-  const { ref } = useResizeObserver<HTMLDivElement>({
-    onResize: () => {
-      throttledAutoScrollToBottom();
-      // TODO 这里要在结束以后补一个调用，不然总是离底部有距离
-      debouncedAutoScrollToBottom();
-    },
-  });
+  const onResize = useCallback(() => autoscrollToBottom?.(), [autoscrollToBottom])
+
+  const { ref } = useResizeObserver<HTMLDivElement>({ onResize });
 
   return (
     <>

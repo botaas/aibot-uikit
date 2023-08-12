@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Components,
   ItemProps,
   ScrollSeekConfiguration,
   ScrollSeekPlaceholderProps,
@@ -104,9 +103,9 @@ type VirtualizedMessageListVirtuosoContext<
   customClasses?: CustomClasses;
 };
 
-const VirtualizedMessageListVirtuosoItem = (
-  props: ItemProps & {
-    context?: unknown;
+const VirtualizedMessageListVirtuosoItem = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
+  props: ItemProps<OneChatMessage<OneChatGenerics>> & {
+    context?: VirtualizedMessageListVirtuosoContext<OneChatGenerics>;
   },
 ) => {
   const { context, ...otherProps } = props;
@@ -116,7 +115,7 @@ const VirtualizedMessageListVirtuosoItem = (
     messageGroupStyles,
     numItemsPrepended,
     customClasses,
-  } = context as VirtualizedMessageListVirtuosoContext;
+  } = context!;
 
   const streamMessageIndex = props['data-item-index'] + numItemsPrepended - PREPEND_OFFSET;
   const message = processedMessages[streamMessageIndex];
@@ -382,13 +381,11 @@ const VirtualizedMessageListWithContext = <
 
       return (
         <Message
+          // autoscrollToBottom={virtuoso.current?.autoscrollToBottom}
           autoscrollToBottom={() => {
-            // virtuoso.current?.autoscrollToBottom()
-
             // TODO 这里应该直接调上面 autoscrollToBottom 就可以了，virtuoso 应该会自己处理保持底部
             // 但是实际没有效果，因此调 scrollToIndex 来处理
             const behavior = followOutput(atBottom.current);
-            console.log(`followOutput atBottom: ${atBottom.current}, behavior: ${behavior}`);
             if (behavior) {
               virtuoso.current?.scrollToIndex({ index: 'LAST', behavior, align: 'end' });
             }
@@ -408,8 +405,8 @@ const VirtualizedMessageListWithContext = <
     [customMessageRenderer, shouldGroupByUser, numItemsPrepended],
   );
 
-  const virtuosoComponents: Partial<Components> = useMemo(() => {
-    const EmptyPlaceholder: Components['EmptyPlaceholder'] = () => (
+  const virtuosoComponents = useMemo((): any => {
+    const EmptyPlaceholder = () => (
       <>
         {EmptyStateIndicator && (
           <EmptyStateIndicator listType={threadList ? 'thread' : 'message'} />
@@ -417,7 +414,7 @@ const VirtualizedMessageListWithContext = <
       </>
     );
 
-    const Header: Components['Header'] = () =>
+    const Header = () =>
       loadingMore ? (
         <div className='str-chat__virtual-list__loading'>
           <LoadingIndicator size={20} />
@@ -426,14 +423,14 @@ const VirtualizedMessageListWithContext = <
         head || null
       );
 
-    const Footer: Components['Footer'] = () =>
+    const Footer = () =>
       TypingIndicator ? <TypingIndicator avatarSize={24} /> : <></>;
 
     return {
       EmptyPlaceholder,
       Footer,
       Header,
-      Item: VirtualizedMessageListVirtuosoItem,
+      Item: VirtualizedMessageListVirtuosoItem<OneChatGenerics>,
     };
   }, [loadingMore, head]);
 
