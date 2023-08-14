@@ -388,12 +388,30 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
     newText = newText + ')';
   }
 
+  // TODO 代码块未闭合进行补全，否则检查链接是否在代码块中时错误
+  const codeBlockQuotes = (newText.match(/```/g) || []).length;
+  console.log('codeBlockQuotes: ' + codeBlockQuotes)
+  if (codeBlockQuotes % 2 !== 0) {
+    newText = newText + '```';
+  }
+
   const markdownLinks = matchMarkdownLinks(newText);
   const codeBlocks = messageCodeBlocks(newText);
   // extract all valid links/emails within text and replace it with proper markup
   uniqBy([...find(newText, 'email'), ...find(newText, 'url')], 'value').forEach(
-    ({ href, type, value }) => {
+    ({ href, type, value, start, end }) => {
       const linkIsInBlock = codeBlocks.some((block) => block?.includes(value));
+
+      // TODO 如果链接包含在 `` 行内代码块中，就不处理
+      console.log(`value: ${value}, start: ${start}, end: ${end}`)
+      if (
+        start > 0 &&
+        newText.charAt(start - 1) === '`' &&
+        end < newText.length - 1 &&
+        newText.charAt(end + 1) === '`'
+      ) {
+        return;
+      }
 
       // check if message is already markdown
       const noParsingNeeded =
