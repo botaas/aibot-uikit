@@ -64,9 +64,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -128,8 +128,8 @@ const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownP
     }
   }, []);
 
-  if (html && mediaType) {
-    // 多媒体类型，直接展开
+  if (html && mediaType === 'video') {
+    // 视频iframe，直接展开
     return (
       <div
         className={`str-chat__message-iframely str-chat__message-iframely-${mediaType}`}
@@ -265,10 +265,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
