@@ -103,19 +103,16 @@ type VirtualizedMessageListVirtuosoContext<
   customClasses?: CustomClasses;
 };
 
-const VirtualizedMessageListVirtuosoItem = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
+const VirtualizedMessageListVirtuosoItem = <
+  OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
+>(
   props: ItemProps<OneChatMessage<OneChatGenerics>> & {
     context?: VirtualizedMessageListVirtuosoContext<OneChatGenerics>;
   },
 ) => {
   const { context, ...otherProps } = props;
 
-  const {
-    processedMessages,
-    messageGroupStyles,
-    numItemsPrepended,
-    customClasses,
-  } = context!;
+  const { processedMessages, messageGroupStyles, numItemsPrepended, customClasses } = context!;
 
   const streamMessageIndex = props['data-item-index'] + numItemsPrepended - PREPEND_OFFSET;
   const message = processedMessages[streamMessageIndex];
@@ -423,14 +420,13 @@ const VirtualizedMessageListWithContext = <
         head || null
       );
 
-    const Footer = () =>
-      TypingIndicator ? <TypingIndicator avatarSize={24} /> : <></>;
+    const Footer = () => (TypingIndicator ? <TypingIndicator avatarSize={24} /> : <></>);
 
     return {
       EmptyPlaceholder,
       Footer,
       Header,
-      Item: VirtualizedMessageListVirtuosoItem<OneChatGenerics>,
+      Item: VirtualizedMessageListVirtuosoItem,
     };
   }, [loadingMore, head]);
 

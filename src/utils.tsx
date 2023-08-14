@@ -1,13 +1,19 @@
-import React, { ComponentProps, ComponentType, useEffect, useState } from 'react';
+import React, { ComponentProps, ComponentType, useEffect, useRef, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
 import { findAndReplace, ReplaceFunction } from 'hast-util-find-and-replace';
 import ReactMarkdown, { Options, uriTransformer } from 'react-markdown';
+
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
+import mermaid from 'mermaid';
+
 import { u } from 'unist-builder';
 import { visit } from 'unist-util-visit';
 
-import remarkGfm from 'remark-gfm';
 import uniqBy from 'lodash.uniqby';
 import clsx from 'clsx';
 
@@ -16,6 +22,25 @@ import type { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 import type { Content, Root } from 'hast';
 import type { DefaultOneChatGenerics, UserResponse } from './types';
 import { delayRender } from './hooks/useDelayRender';
+
+export async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (error) {
+      console.error('copy to clipboard: ', error);
+      throw error;
+    }
+    document.body.removeChild(textArea);
+  }
+}
 
 export const isOnlyEmojis = (text?: string) => {
   if (!text) return false;
@@ -34,6 +59,7 @@ const allowedMarkups: Array<keyof JSX.IntrinsicElements | 'emoji' | 'mention'> =
   'em',
   'strong',
   'a',
+  'span',
   'img',
   'video',
   'iframe',
@@ -78,7 +104,7 @@ export const messageCodeBlocks = (message: string) => {
   return matches || [];
 };
 
-const detectHttp = /(http(s?):\/\/)?(www\.)?/;
+const detectHttp = /http(s?):\/\/(www\.)?/;
 
 function formatUrlForDisplay(url: string) {
   try {
@@ -95,6 +121,79 @@ function encodeDecode(url: string) {
     return url;
   }
 }
+
+const Mermaid = (props: { code: string; onError: () => void }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (props.code && ref.current) {
+      mermaid
+        .run({
+          nodes: [ref.current],
+        })
+        .catch((e) => {
+          props.onError();
+          console.error('[Mermaid] ', e.message);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.code]);
+
+  function viewSvgInNewWindow() {
+    const svg = ref.current?.querySelector('svg');
+    if (!svg) return;
+    const text = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([text], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url);
+    if (win) {
+      win.onload = () => URL.revokeObjectURL(url);
+    }
+  }
+
+  return (
+    <div
+      className='no-dark'
+      style={{ cursor: 'pointer', overflow: 'auto' }}
+      ref={ref}
+      onClick={() => viewSvgInNewWindow()}
+    >
+      {props.code}
+    </div>
+  );
+};
+
+const PreCode = (props: { children: any }) => {
+  const ref = useRef<HTMLPreElement>(null);
+  const [mermaidCode, setMermaidCode] = useState('');
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const mermaidDom = ref.current.querySelector('code.language-mermaid');
+    if (mermaidDom) {
+      setMermaidCode((mermaidDom as HTMLElement).innerText);
+    }
+  }, [props.children]);
+
+  if (mermaidCode) {
+    return <Mermaid code={mermaidCode} onError={() => setMermaidCode('')} />;
+  }
+
+  return (
+    <pre ref={ref}>
+      <span
+        className='copy-code-button'
+        onClick={() => {
+          if (ref.current) {
+            const code = ref.current.innerText;
+            copyToClipboard(code);
+          }
+        }}
+      ></span>
+      {props.children}
+    </pre>
+  );
+};
 
 const KEY = '2ff2c1b746d605de30463e';
 
@@ -186,6 +285,7 @@ const Mention = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChat
 );
 
 export const markDownRenderers: RenderTextOptions['customMarkDownRenderers'] = {
+  pre: PreCode,
   a: Anchor,
   emoji: Emoji,
   mention: Mention,
@@ -283,6 +383,8 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
 
   let newText = text;
 
+  console.log(newText)
+
   // TODO 补全结尾不完整的 markdown 链接，否则 streaming 模式下追加文本时，遇到不完整的链接，会解析错误
   if (/\[([^[]+)\]\(http(s?):\/\/([^)]+)$/.test(newText)) {
     newText = newText + ')';
@@ -372,8 +474,18 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
       className='str-chat__message-markdown'
       allowedElements={allowedMarkups}
       components={rehypeComponents}
-      rehypePlugins={rehypePlugins}
-      remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+      rehypePlugins={[
+        rehypeKatex,
+        [
+          rehypeHighlight,
+          {
+            detect: false,
+            ignoreMissing: true,
+          },
+        ],
+        ...rehypePlugins,
+      ]}
+      remarkPlugins={[remarkMath, [remarkGfm, { singleTilde: false }]]}
       skipHtml
       transformLinkUri={(uri) => (uri.startsWith('app://') ? uri : uriTransformer(uri))}
       unwrapDisallowed

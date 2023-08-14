@@ -115,7 +115,7 @@ const MessageSimpleWithContext = <
 
   // iframely、markdown、图片懒加载等都可能导致消息气泡大小发生变化
   // 这里监听气泡大小变化以后，调整位置自动滑动到底部
-  const onResize = useCallback(() => autoscrollToBottom?.(), [autoscrollToBottom])
+  const onResize = useCallback(() => autoscrollToBottom?.(), [autoscrollToBottom]);
 
   const { ref } = useResizeObserver<HTMLDivElement>({ onResize });
 

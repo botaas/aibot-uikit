@@ -7,7 +7,6 @@ import typescript from '@rollup/plugin-typescript';
 import external from 'rollup-plugin-peer-deps-external';
 import url from 'rollup-plugin-url';
 import copy from 'rollup-plugin-copy';
-import globals from 'rollup-plugin-node-globals';
 import visualizer from 'rollup-plugin-visualizer';
 import replace from '@rollup/plugin-replace';
 import builtins from 'rollup-plugin-node-builtins';
@@ -63,7 +62,6 @@ const externalDependencies = [
 const basePlugins = ({ useBrowserResolve = false }) => [
   replace({
     preventAssignment: true,
-    'process.env.NODE_ENV': JSON.stringify('production'),
   }),
   // Remove peer-dependencies from final bundle
   external(),
@@ -86,6 +84,7 @@ const basePlugins = ({ useBrowserResolve = false }) => [
       { dest: 'dist/scss', src: './node_modules/@stream-io/stream-chat-css/dist/scss/*' },
       { dest: 'dist/css/v2', src: './node_modules/@stream-io/stream-chat-css/dist/v2/css/*' },
       { dest: 'dist/scss/v2', src: './node_modules/@stream-io/stream-chat-css/dist/v2/scss/*' },
+      { dest: 'dist/css', src: './node_modules/katex/dist/katex.min.css' },
     ],
     verbose: process.env.VERBOSE,
     watch: process.env.ROLLUP_WATCH,
@@ -130,13 +129,6 @@ const fullBrowserBundle = ({ min } = { min: false }) => ({
       resolveId: (importee) => (importee.match(/.s?css$/) ? importee : null),
     },
     builtins(),
-    globals({
-      buffer: false,
-      dirname: false,
-      filename: false,
-      globals: false,
-      process: true,
-    }),
     min ? terser() : null,
   ],
 });
