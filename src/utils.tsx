@@ -90,9 +90,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-      const i = singleMatch.exec(match);
-      return i && [i[1], i[2]];
-    })
+        const i = singleMatch.exec(match);
+        return i && [i[1], i[2]];
+      })
     : [];
 
   return links.flat();
@@ -227,13 +227,26 @@ const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownP
     }
   }, []);
 
-  if (html && mediaType === 'video') {
-    // 视频iframe，直接展开
+  if (html && (mediaType === 'video' || mediaType === 'image')) {
     return (
-      <div
-        className={`str-chat__message-iframely str-chat__message-iframely-${mediaType}`}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <>
+        {/* TODO iframely 内嵌的宽度是自适应的，所以需要一个占位的 <a /> 将气泡宽度撑开，靠度隐藏 */}
+        <a
+          className={clsx(
+            { 'str-chat__message-url-link': isUrl },
+            'str-chat__message-iframely-url-link',
+          )}
+          href={href}
+          rel='nofollow noreferrer noopener'
+          target='_blank'
+        >
+          {children}
+        </a>
+        <div
+          className={`str-chat__message-iframely str-chat__message-iframely-${mediaType}`}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </>
     );
   }
 
@@ -365,10 +378,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-  Partial<{
-    emoji: ComponentType<ReactMarkdownProps>;
-    mention: ComponentType<MentionProps<OneChatGenerics>>;
-  }>;
+    Partial<{
+      emoji: ComponentType<ReactMarkdownProps>;
+      mention: ComponentType<MentionProps<OneChatGenerics>>;
+    }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
@@ -390,7 +403,7 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
 
   // TODO 代码块未闭合进行补全，否则检查链接是否在代码块中时错误
   const codeBlockQuotes = (newText.match(/```/g) || []).length;
-  console.log('codeBlockQuotes: ' + codeBlockQuotes)
+  console.log('codeBlockQuotes: ' + codeBlockQuotes);
   if (codeBlockQuotes % 2 !== 0) {
     newText = newText + '```';
   }
@@ -403,7 +416,7 @@ export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = Defa
       const linkIsInBlock = codeBlocks.some((block) => block?.includes(value));
 
       // TODO 如果链接包含在 `` 行内代码块中，就不处理
-      console.log(`value: ${value}, start: ${start}, end: ${end}`)
+      console.log(`value: ${value}, start: ${start}, end: ${end}`);
       if (
         start > 0 &&
         newText.charAt(start - 1) === '`' &&
