@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentType, useEffect, useRef, useState } from 'react';
+import React, { ComponentProps, ComponentType, useEffect, useMemo, useRef, useState } from 'react';
 import emojiRegex from 'emoji-regex';
 import { find } from 'linkifyjs';
 import { nanoid } from 'nanoid';
@@ -90,9 +90,9 @@ export const matchMarkdownLinks = (message: string) => {
 
   const links = matches
     ? matches.map((match) => {
-        const i = singleMatch.exec(match);
-        return i && [i[1], i[2]];
-      })
+      const i = singleMatch.exec(match);
+      return i && [i[1], i[2]];
+    })
     : [];
 
   return links.flat();
@@ -199,9 +199,10 @@ const KEY = '2ff2c1b746d605de30463e';
 
 const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownProps) => {
   const isUrl = href?.startsWith('http');
-  const [_error, setError] = useState<unknown>();
+  const [_error, setError] = useState<any>();
   const [html, setHtml] = useState('');
   const [mediaType, setMediaType] = useState('');
+  const [links, setLinks] = useState<any>();
 
   useEffect(() => {
     if (href && isUrl) {
@@ -218,6 +219,7 @@ const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownP
           } else {
             setHtml(res.html);
             setMediaType(res.meta?.medium);
+            setLinks(res.links)
           }
         })
         .catch((error) => {
@@ -227,15 +229,18 @@ const IframelyRender = ({ href, children }: ComponentProps<'a'> & ReactMarkdownP
     }
   }, []);
 
+  const maxWidth = useMemo(() => links?.image?.[0]?.media?.width ?? 0, [links])
+
   if (html && (mediaType === 'video' || mediaType === 'image')) {
     return (
       <>
-        {/* TODO iframely 内嵌的宽度是自适应的，所以需要一个占位的 <a /> 将气泡宽度撑开，靠度隐藏 */}
+        {/* TODO iframely 内嵌的宽度是自适应的，所以需要一个占位的 <a /> 将气泡宽度撑开，高度隐藏 */}
         <a
           className={clsx(
             { 'str-chat__message-url-link': isUrl },
             'str-chat__message-iframely-url-link',
           )}
+          style={maxWidth ? { maxWidth: `${maxWidth}px` } : {}}
           href={href}
           rel='nofollow noreferrer noopener'
           target='_blank'
@@ -378,10 +383,10 @@ export type RenderTextOptions<
   OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics
 > = {
   customMarkDownRenderers?: Options['components'] &
-    Partial<{
-      emoji: ComponentType<ReactMarkdownProps>;
-      mention: ComponentType<MentionProps<OneChatGenerics>>;
-    }>;
+  Partial<{
+    emoji: ComponentType<ReactMarkdownProps>;
+    mention: ComponentType<MentionProps<OneChatGenerics>>;
+  }>;
 };
 
 export const renderText = <OneChatGenerics extends DefaultOneChatGenerics = DefaultOneChatGenerics>(
